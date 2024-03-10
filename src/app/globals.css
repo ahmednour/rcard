@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,7 +25,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-    height: 100vh;
+  height: 100vh;
+  direction: rtl;
 }
 
 @layer utilities {
@@ -33,30 +35,43 @@ body {
   }
 }
 .mobileDevice {
-   position: relative;
-   width: 430px;
-   height: 794px;
-   margin: auto;
-   border: 16px rgb(7, 80, 35) solid;
-   border-top-width: 60px;
-   border-bottom-width: 60px;
-   border-radius: 36px;
-   background-size: contain;
+  position: relative;
+  width: 375px;
+  height: 667px;
+  margin: auto;
+  border: 16px rgb(39 39 19) solid;
+  border-top-width: 60px;
+  border-bottom-width: 60px;
+  border-radius: 36px;
+  background-size: fill;
 }
 .mobileDevice:after {
-   content: '';
-   display: block;
-   width: 35px;
-   height: 35px;
-   position: absolute;
-   left: 50%;
-   bottom: -65px;
-   transform: translate(-50%, -50%);
-   background: #333;
-   border-radius: 50%;
-   border:2px solid rgb(200, 255, 0);
+  content: "";
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 50%;
+  bottom: -65px;
+  transform: translate(-50%, -50%);
+  background: #333;
+  border-radius: 50%;
+  border: 2px solid rgb(200, 255, 0);
 }
-   .mobileDevice .screen {
-         width: 100%;
-         height: 100%;
-      }
+.mobileDevice .screen {
+  width: 100%;
+  height: 100%;
+}
+#card-2 h2 {
+  color: #89a10b;
+}
+#card-2 p {
+  color: #7f7f7f;
+}
+#card-3 p {
+  color: #d6d6d6;
+}
+.form h2 {
+  font-family: "Noto Nastaliq Urdu", serif;
+  margin-bottom: 5px;
+}

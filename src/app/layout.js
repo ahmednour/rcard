@@ -1,4 +1,4 @@
-import { Alexandria, notoNastaliqUrdu } from "next/font/google";
+import { Alexandria } from "next/font/google";
 import "./globals.css";
 
 const Alex = Alexandria({ subsets: ["latin"] });
