@@ -26,9 +26,11 @@ export default function Home() {
         console.log(err);
       });
   };
+  const [isActive, setActive] = useState(false);
+
   return (
     <div className="lg:max-w-4xl   mx-auto pt-20">
-      <h1 className="text-2xl w-1/2 mx-auto text-center">
+      <h1 className="text-2xl w-3/4 lg:w-1/2  mx-auto text-center">
         صمم بطاقة المعايدة الخاصة بك في أقل من دقيقة
       </h1>
       <div className="text-center mt-7">
@@ -44,8 +46,11 @@ export default function Home() {
               alt="cardImage"
               onClick={() => {
                 setImage(img);
+                setActive(i);
               }}
-              className="h-[220px] w-[120px] cursor-pointer"
+              className={`h-[220px] w-[120px] cursor-pointer ${
+                isActive == i ? "border-[#cbe44c] border-[2px]" : ""
+              }`}
             />
           ))}
         </div>
