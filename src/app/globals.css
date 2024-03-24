@@ -76,3 +76,6 @@ body {
   font-family: "Noto Nastaliq Urdu", serif;
   margin-bottom: 5px;
 }
+canvas {
+  width: 100%;
+}

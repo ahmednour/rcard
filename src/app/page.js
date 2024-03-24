@@ -1,8 +1,8 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Form from "@/components/form/Form";
-import Image from "next/image";
+import NextImage from "next/image";
 import bg from "../../public/bg.jpg";
 import bg2 from "../../public/bg2.jpg";
 import bg3 from "../../public/bg3.jpg";
@@ -14,17 +14,44 @@ export default function Home() {
   const [pos, setPos] = useState([]);
   const [imgs, setImage] = useState(bg);
   const elementRef = useRef(null);
-  const htmlToImageConvert = () => {
-    toPng(elementRef.current, { cacheBust: false })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    // Load the image
+    const image = new Image();
+    image.onload = () => {
+      // Draw the image on the canvas
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      // Write text in the center of the canvas
+      const text = "Your Text Here";
+      ctx.font = "30px Arial";
+      const textWidth = ctx.measureText(text).width;
+      const x = (canvas.width - textWidth) / 2;
+      const y = (canvas.height + 15) / 2; // Add some padding to position text vertically
+      ctx.fillStyle = "white"; // Adjust fill style as needed
+      ctx.fillText(text, x, y);
+    };
+    image.src =
+      "http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbg2.6c570716.jpg&w=1200&q=75"; // Replace with your image URL
+  }, []);
+  const htmlToImageConvert = (event) => {
+    // toPng(elementRef.current, { cacheBust: false })
+    //   .then((dataUrl) => {
+    //     const link = document.createElement("a");
+    //     link.download = "my-image-name.png";
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    let link = event.currentTarget;
+    link.download = "my-image-name.png";
+    let image = canvasRef.current.toDataURL("image/png");
+    link.href = image;
   };
   const [isActive, setActive] = useState(false);
 
@@ -40,9 +67,10 @@ export default function Home() {
         <span className="mb-8 block text-[1.5rem]">اختر قالب البطاقة</span>
         <div className="flex justify-center items-center gap-2 flex-wrap">
           {images.map((img, i) => (
-            <Image
+            <NextImage
               src={img}
               key={i}
+              priority
               alt="cardImage"
               onClick={() => {
                 setImage(img);
@@ -93,28 +121,24 @@ export default function Home() {
           <span className=" block text-[1.5rem] my-3">عاين البطاقة وحملها</span>
           <div
             ref={elementRef}
-            className=" flex justify-center items-center mb-10 relative h-[620px] w-[320px] mx-auto"
+            className=" flex justify-center items-center w-full mb-10 relative"
             id="result"
           >
-            <div className="absolute  top-[320px]">
+            {/* <div className="absolute  top-[320px]">
               <h2 className="text-[15px] text-white">{data}</h2>
               <p className="text-[10px]">{pos}</p>
             </div>
-            <Image
-              src={imgs}
-              alt=""
-              className="h-[620px] w-[320px] "
-              width={320}
-              height={620}
-            />
+            <Image src={imgs} alt="" priority /> */}
+            <canvas ref={canvasRef} width={1125} height={1905} />
           </div>
-          <button
+          <a
+            id="download-image-link"
+            href="download-link"
             onClick={htmlToImageConvert}
             className="bg-[#83923b] text-white px-4 py-2 rounded-lg mb-4"
           >
-            {" "}
             تحميل البطاقة
-          </button>
+          </a>
         </div>
       </div>
       <Form />
