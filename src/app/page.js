@@ -6,7 +6,6 @@ import NextImage from "next/image";
 import bg from "../../public/bg.jpg";
 import bg2 from "../../public/bg2.jpg";
 import bg3 from "../../public/bg3.jpg";
-import { toPng } from "html-to-image";
 
 export default function Home() {
   const images = [bg, bg2, bg3];
@@ -26,7 +25,7 @@ export default function Home() {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
       // Write text in the center of the canvas
-      const text = "Your Text Here";
+      const text = data;
       ctx.font = "30px Arial";
       const textWidth = ctx.measureText(text).width;
       const x = (canvas.width - textWidth) / 2;
@@ -34,9 +33,8 @@ export default function Home() {
       ctx.fillStyle = "white"; // Adjust fill style as needed
       ctx.fillText(text, x, y);
     };
-    image.src =
-      "http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbg2.6c570716.jpg&w=1200&q=75"; // Replace with your image URL
-  }, []);
+    image.src = imgs; // Replace with your image URL
+  }, [imgs, data]);
   const htmlToImageConvert = (event) => {
     // toPng(elementRef.current, { cacheBust: false })
     //   .then((dataUrl) => {
