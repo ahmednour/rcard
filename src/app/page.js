@@ -12,6 +12,7 @@ export default function Home() {
   const [data, setData] = useState([]);
   const [pos, setPos] = useState([]);
   const [imgs, setImage] = useState(bg);
+  const [clickedId, setClickedId] = useState(null);
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
   useEffect(() => {
@@ -29,10 +30,7 @@ export default function Home() {
       //const textWidth = ctx.measureText(text).width;
       const x = canvas.width / 2;
       const y = (canvas.height + 100) / 2; // Add some padding to position text vertically
-      if (
-        image.src ===
-        "http://localhost:3000/_next/static/media/bg2.6c570716.jpg"
-      ) {
+      if (clickedId === 1) {
         ctx.fillStyle = "#88a108";
       } else {
         ctx.fillStyle = "white";
@@ -48,7 +46,7 @@ export default function Home() {
       ctx.fillText(position, xx, yy + 40);
     };
     image.src = imgs.src;
-  }, [imgs, data, pos]);
+  }, [imgs, data, pos, clickedId]);
   const htmlToImageConvert = (event) => {
     let link = event.currentTarget;
     link.download = "my-image-name.png";
@@ -71,12 +69,14 @@ export default function Home() {
           {images.map((img, i) => (
             <NextImage
               src={img}
+              id={i}
               key={i}
               priority
               alt="cardImage"
               onClick={() => {
                 setImage(img);
                 setActive(i);
+                setClickedId(i);
               }}
               className={`h-[220px] w-[120px] cursor-pointer ${
                 isActive == i ? "border-[#cbe44c] border-[2px]" : ""
