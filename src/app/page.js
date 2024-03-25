@@ -23,29 +23,33 @@ export default function Home() {
     image.onload = () => {
       // Draw the image on the canvas
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
       // Write text in the center of the canvas
       const text = data;
-      ctx.font = "30px Arial";
-      const textWidth = ctx.measureText(text).width;
-      const x = (canvas.width - textWidth) / 2;
-      const y = (canvas.height + 15) / 2; // Add some padding to position text vertically
-      ctx.fillStyle = "white"; // Adjust fill style as needed
+      ctx.font = "46px Alexandria";
+      //const textWidth = ctx.measureText(text).width;
+      const x = canvas.width / 2;
+      const y = (canvas.height + 100) / 2; // Add some padding to position text vertically
+      if (
+        image.src ===
+        "http://localhost:3000/_next/static/media/bg2.6c570716.jpg"
+      ) {
+        ctx.fillStyle = "#88a108";
+      } else {
+        ctx.fillStyle = "white";
+      }
+      ctx.textAlign = "center";
       ctx.fillText(text, x, y);
+      const position = pos;
+      ctx.font = "30px Alexandria";
+      const xx = canvas.width / 2;
+      const yy = (canvas.height + 110) / 2; // Add some padding to position text vertically
+      ctx.fillStyle = "black";
+      ctx.textAlign = "center";
+      ctx.fillText(position, xx, yy + 40);
     };
-    image.src = imgs; // Replace with your image URL
-  }, [imgs, data]);
+    image.src = imgs.src;
+  }, [imgs, data, pos]);
   const htmlToImageConvert = (event) => {
-    // toPng(elementRef.current, { cacheBust: false })
-    //   .then((dataUrl) => {
-    //     const link = document.createElement("a");
-    //     link.download = "my-image-name.png";
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     let link = event.currentTarget;
     link.download = "my-image-name.png";
     let image = canvasRef.current.toDataURL("image/png");
@@ -54,7 +58,7 @@ export default function Home() {
   const [isActive, setActive] = useState(false);
 
   return (
-    <div className="lg:max-w-4xl   mx-auto pt-20">
+    <div className="lg:max-w-4xl mx-auto pt-20">
       <h1 className="text-2xl w-3/4 lg:w-1/2  mx-auto text-center">
         صمم بطاقة المعايدة الخاصة بك في أقل من دقيقة
       </h1>
@@ -119,7 +123,7 @@ export default function Home() {
           <span className=" block text-[1.5rem] my-3">عاين البطاقة وحملها</span>
           <div
             ref={elementRef}
-            className=" flex justify-center items-center w-full mb-10 relative"
+            className=" flex justify-center items-center w-[80%] mx-auto lg:w-full mb-10 relative"
             id="result"
           >
             {/* <div className="absolute  top-[320px]">
@@ -127,13 +131,18 @@ export default function Home() {
               <p className="text-[10px]">{pos}</p>
             </div>
             <Image src={imgs} alt="" priority /> */}
-            <canvas ref={canvasRef} width={1125} height={1905} />
+            <canvas
+              ref={canvasRef}
+              width={1125}
+              height={1905}
+              className="text-center"
+            />
           </div>
           <a
             id="download-image-link"
             href="download-link"
             onClick={htmlToImageConvert}
-            className="bg-[#83923b] text-white px-4 py-2 rounded-lg mb-4"
+            className="bg-[#83923b] text-white px-4 py-4 rounded-lg mb-7 block w-[80%] mx-auto"
           >
             تحميل البطاقة
           </a>
