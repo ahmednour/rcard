@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: "out",
-  basePath: "",
-
-  output: "standalone",
+  
   //trailingSlash: true,
 
   images: {
