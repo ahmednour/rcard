@@ -2,8 +2,10 @@
 const nextConfig = {
   distDir: "out",
   basePath: "",
-  output: "export",
-  trailingSlash: true,
+
+  output: "standalone",
+  //trailingSlash: true,
+
   images: {
     loader: "custom",
     loaderFile: "./ImageLoader.js",

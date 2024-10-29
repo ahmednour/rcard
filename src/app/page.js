@@ -1,33 +1,7 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
 
-import { useState, useEffect } from "react";
-import { redirect } from "next/dist/server/api-utils";
 export default function Home() {
-  const [state, setState] = useState();
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://najranapp:8078/CardsAPI/Permissions/IsAuthorized"
-        );
-        const data = await response.json();
-        console.log(data);
-        setState(data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setIsLoading(false);
-        console.log(data);
-      }
-    };
-
-    fetchData();
-  }, []);
   return (
     <div className="flex flex-col justify-center items-center h-svh">
       <Image
@@ -43,20 +17,14 @@ export default function Home() {
         والأعياد الدينية والرسمية للمملكة العربية السعودية
       </h2>
       <div className="flex flex-row justify-center items-center gap-3 mt-5">
-        <button
+        <Link
           type="button"
+          href="/invitation"
           className="cssbuttons-io link1  text-white text-2xl font-bold py-4 px-8 rounded-full shadow-lg flex flex-row gap-2 justify-center items-center"
-          onClick={() => {
-            if (state) {
-              redirect("/invitation");
-            } else {
-              alert("لايوجد لديك صلاحيه للدخول");
-            }
-          }}
         >
           <img src="/icon.svg" alt="holiday" className="w-10 h-10" />
           <span>الدعوات الرسمية</span>
-        </button>
+        </Link>
         <Link
           href="/holiday"
           className="cssbuttons-io link2  text-white text-2xl font-bold py-4 px-8 rounded-full shadow-lg flex flex-row gap-2 justify-center items-center"
