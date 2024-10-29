@@ -4,7 +4,6 @@ import Form from "../../../components/form/Form";
 import NextImage from "next/image";
 import bg10 from "@/public/bg10.jpeg";
 import logo from "@/public/Najran-Municipality.svg";
-import { logout } from "../../login/actions";
 
 const Invitation = () => {
   const images = useMemo(() => [bg10], []);
@@ -88,8 +87,6 @@ const Invitation = () => {
   ));
   return (
     <div className="lg:max-w-4xl mx-auto pt-20">
-      <button onClick={() => logout()}>Logout</button>
-
       <NextImage
         src={logo}
         alt="logo"
