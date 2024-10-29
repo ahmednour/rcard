@@ -22,6 +22,7 @@ export default function Home() {
         setError(error);
       } finally {
         setIsLoading(false);
+        console.log(data);
       }
     };
 
