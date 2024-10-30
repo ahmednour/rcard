@@ -62,7 +62,6 @@ export function LoginForm() {
 }
 
 function SubmitButton() {
-  "use client";
   const { pending } = useFormStatus();
 
   return (
