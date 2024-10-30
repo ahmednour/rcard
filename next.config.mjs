@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
- basePath: "",
+  basePath: "",
+  reactStrictMode: true,
+  // trailingSlash: true,
   images: {
     loader: "custom",
     loaderFile: "./ImageLoader.js",
