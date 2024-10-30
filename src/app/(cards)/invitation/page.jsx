@@ -28,7 +28,7 @@ const Invitation = () => {
       };
       const dateConfig = {
         x: canvas.width / 2 + 0,
-        y: (canvas.height + 520) / 2 + 100,
+        y: (canvas.height + 20) / 2 + 100,
         color: "#fff",
       };
 
@@ -37,7 +37,7 @@ const Invitation = () => {
       ctx.textAlign = "center";
       ctx.fillText(data, textConfig.x, textConfig.y);
 
-      ctx.font = "25px Alexandria";
+      ctx.font = "32px Alexandria";
       ctx.fillStyle = isFirstTemplate ? "#aa804e" : "#fff";
       ctx.fillText(position, dateConfig.x, dateConfig.y + 40);
     };

@@ -36,7 +36,9 @@ export async function login(prevState, formData) {
       },
     };
   }
-
+  console.log(testUser.id);
+  console.log(testUser.email);
+  console.log(testUser.password);
   await createSession(testUser.id);
 
   redirect("/invitation");

@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { decrypt } from "./app/lib/session";
 
-const protectedRoutes = ["/invitation", "/holiday"];
+const protectedRoutes = ["/invitation"];
 const publicRoutes = ["/login"];
 
 export default async function middleware(req) {
@@ -18,7 +18,7 @@ export default async function middleware(req) {
   }
 
   if (isPublicRoute && session?.userId) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+    return NextResponse.redirect(new URL("/invitation", req.nextUrl));
   }
 
   return NextResponse.next();

@@ -1,33 +1,28 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { login } from "./actions";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export function LoginForm() {
-  const [state, formAction] = useFormState(login, undefined);
+  const [state, loginAction] = useActionState(login, undefined);
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-8 rounded-lg shadow-xl w-full max-w-md z-10 border border-2 border-gray-200"
-    >
+    <div className="flex flex-col items-center justify-center max-w-md w-full mx-auto bg-slate-100 shadow-lg rounded-lg p-10">
       <h1 className="text-3xl font-bold mb-6 text-center text-emerald-950">
         سجل الدخول للخدمة
       </h1>
-      <form action={formAction} className="space-y-4">
+      <form action={loginAction} className="space-y-4 w-full">
         <div className="space-y-2">
           <input
             id="email"
             name="email"
             type="email"
             placeholder="البريد الإلكتروني"
-            className="w-full bg-white bg-opacity-20 text-gray-900 placeholder-gray-900 border-white border-opacity-30 focus:border-white focus:ring-white h-12 rounded px-3 py-2"
+            className="w-full bg-white bg-opacity-95 text-gray-900 placeholder-gray-900 border-gray-950 border-opacity-95 focus:border-white focus:ring-white h-12 rounded px-3 py-2"
           />
           {state?.errors?.email && (
             <p className="text-red-500 text-sm">{state.errors.email}</p>
@@ -41,7 +36,7 @@ export function LoginForm() {
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="........"
-              className="w-full bg-white bg-opacity-20 text-gray-900 placeholder-gray-900 border-white border-opacity-30 focus:border-white focus:ring-white h-12 rounded px-3 py-2"
+              className="w-full bg-white bg-opacity-95 text-gray-900 placeholder-gray-900 border-gray-950 border-opacity-95 focus:border-white focus:ring-white h-12 rounded px-3 py-2"
             />
             <button
               type="button"
@@ -62,7 +57,7 @@ export function LoginForm() {
         </div>
         <SubmitButton />
       </form>
-    </motion.div>
+    </div>
   );
 }
 
