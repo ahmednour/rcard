@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import Modal from "./components/Modal";
-
+    
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
