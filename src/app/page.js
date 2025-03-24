@@ -2,12 +2,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import Modal from "./components/Modal";
-    
+import Modal from "./components/Modal.js";
+
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
-
+  // new
   useEffect(() => {
     // Get the current count from localStorage
     const currentCount = parseInt(localStorage.getItem("visitorCount") || "0");
