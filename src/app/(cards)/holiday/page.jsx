@@ -2,30 +2,88 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Form from "../../../components/form/Form";
 import NextImage from "next/image";
-import bg4 from "@/public/bg4.jpg";
-import bg5 from "@/public/bg5.jpg";
+import bg1 from "@/public/bg1.jpg";
+import bg2 from "@/public/bg2.jpg";
+import bg3 from "@/public/bg3.jpg";
 import logo from "@/public/Najran-Municipality.svg";
 const Holiday = () => {
-  const images = useMemo(() => [bg4, bg5], []);
+  const images = useMemo(() => [bg1, bg2, bg3], []);
   const [data, setData] = useState([]);
   const [position, setPosition] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(bg4);
-  const [clickedId, setClickedId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [clickedId, setClickedId] = useState(0);
+  const [isActive, setActive] = useState(0);
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+
+  // Initial load effect to ensure bg1 is loaded first
   useEffect(() => {
+    // Add a small delay to ensure the canvas is properly mounted
+    const timer = setTimeout(() => {
+      if (canvasRef.current) {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+
+        const initialImage = new Image();
+        initialImage.crossOrigin = "Anonymous";
+        initialImage.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(initialImage, 0, 0, canvas.width, canvas.height);
+
+          // Also draw any initial text if needed
+          if (data.length > 0 || position.length > 0) {
+            const textConfig = {
+              x: canvas.width / 2 + 300,
+              y: (canvas.height + 500) / 2,
+              color: "#fbb040",
+            };
+
+            ctx.font = "bold 36px Alexandria";
+            ctx.fillStyle = textConfig.color;
+            ctx.textAlign = "center";
+            ctx.fillText(data, textConfig.x, textConfig.y);
+
+            ctx.font = "25px Alexandria";
+            ctx.fillStyle = "#ab8150";
+            ctx.fillText(position, textConfig.x, textConfig.y + 40);
+          }
+        };
+        initialImage.src = images[0].src;
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [images, data, position]);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
     const image = new Image();
+    image.crossOrigin = "Anonymous";
     image.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      const isFirstTemplate = clickedId === 1;
+      const isFirstTemplate = clickedId === 0;
+      const isSecondTemplate = clickedId === 1;
+      const isThirdTemplate = clickedId === 2;
+
       const textConfig = {
-        x: canvas.width / 2 + (isFirstTemplate ? 300 : 250),
-        y: (canvas.height + (isFirstTemplate ? 450 : 650)) / 2,
-        color: isFirstTemplate ? "#e4cc68" : "white",
+        x:
+          canvas.width / 2 +
+          (isFirstTemplate ? 300 : isSecondTemplate ? 250 : 50),
+        y:
+          (canvas.height +
+            (isFirstTemplate ? 500 : isSecondTemplate ? 520 : 450)) /
+          2,
+        color: isFirstTemplate
+          ? "#fbb040"
+          : isSecondTemplate
+          ? "#fbb040"
+          : "#fbb040",
       };
 
       ctx.font = "bold 36px Alexandria";
@@ -34,10 +92,14 @@ const Holiday = () => {
       ctx.fillText(data, textConfig.x, textConfig.y);
 
       ctx.font = "25px Alexandria";
-      ctx.fillStyle = isFirstTemplate ? "#aa804e" : "#fff";
+      ctx.fillStyle = isFirstTemplate
+        ? "#ab8150"
+        : isSecondTemplate
+        ? "#ab8150"
+        : "#ab8150";
       ctx.fillText(position, textConfig.x, textConfig.y + 40);
     };
-    image.src = selectedImage.src;
+    image.src = selectedImage?.src || images[0].src;
   }, [selectedImage, data, position, clickedId]);
   const htmlToImageConvert = (event) => {
     let link = event.currentTarget;
@@ -45,7 +107,6 @@ const Holiday = () => {
     let image = canvasRef.current.toDataURL("image/png");
     link.href = image;
   };
-  const [isActive, setActive] = useState(0);
   // card template
   const cardTemplate = [
     {
