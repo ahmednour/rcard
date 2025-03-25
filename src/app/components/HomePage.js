@@ -42,9 +42,11 @@ export default function HomePage({ session }) {
             }}
             className="cssbuttons-io link1 w-full sm:w-auto text-white text-xl sm:text-2xl font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full shadow-lg flex flex-row gap-2 justify-center items-center transition-all hover:scale-105"
           >
-            <img
+            <Image
               src="/icon.svg"
               alt="holiday"
+              width={40}
+              height={40}
               className="w-8 sm:w-10 h-8 sm:h-10"
             />
             <span>الدعوات الرسمية</span>
@@ -53,9 +55,11 @@ export default function HomePage({ session }) {
             href="/holiday"
             className="cssbuttons-io link2 w-full sm:w-auto text-white text-xl sm:text-2xl font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full shadow-lg flex flex-row gap-2 justify-center items-center transition-all hover:scale-105"
           >
-            <img
+            <Image
               src="/icon.svg"
               alt="holiday"
+              width={40}
+              height={40}
               className="w-8 sm:w-10 h-8 sm:h-10"
             />
             <span>الأعياد والمناسبات</span>
