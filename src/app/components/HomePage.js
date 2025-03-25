@@ -63,7 +63,7 @@ export default function HomePage({ session }) {
         </div>
         <footer className="fixed bottom-0 h-10 text-center w-full bg-white/80 backdrop-blur-sm py-2">
           <p className="text-sm sm:text-base">
-            جميع الحقوق محفوظة – أمانة منطقة نجران © 2024
+            جميع الحقوق محفوظة – أمانة منطقة نجران © {new Date().getFullYear()}
           </p>
         </footer>
       </div>
