@@ -1,3 +1,3 @@
-export default function ImageLoader({ src }) {
-  return `${src}`;
+export default function ImageLoader({ src, width }) {
+  return `${src}${width ? `?w=${width}` : ""}`;
 }

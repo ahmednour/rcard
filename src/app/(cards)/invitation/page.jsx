@@ -5,6 +5,9 @@ import NextImage from "next/image";
 import bg10 from "@/public/bg10.jpeg";
 import logo from "@/public/Najran-Municipality.svg";
 import { logout } from "../../login/actions";
+import VisitorCounter from "../../../components/VisitorCounter";
+import ClientProvider from "../../../components/ClientProvider";
+
 const Invitation = () => {
   const images = useMemo(() => [bg10], []);
   const [data, setData] = useState([]);
@@ -13,6 +16,7 @@ const Invitation = () => {
   const [clickedId, setClickedId] = useState(null);
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -86,68 +90,71 @@ const Invitation = () => {
     />
   ));
   return (
-    <div className="lg:max-w-4xl mx-auto pt-20">
-      <button onClick={() => logout()}>Logout</button>
-      <NextImage
-        src={logo}
-        alt="logo"
-        width="200"
-        height="100"
-        className="mx-auto mb-3"
-      />
-      <h1 className="text-2xl w-3/4 lg:w-1/2  mx-auto text-center">
-        تصميم كارت دعوه لحضور لقاء المستثمرين ورجال الاعمال
-      </h1>
+    <ClientProvider>
+      <div className="lg:max-w-4xl mx-auto pt-20">
+        <VisitorCounter />
+        <button onClick={() => logout()}>Logout</button>
+        <NextImage
+          src={logo}
+          alt="logo"
+          width="200"
+          height="100"
+          className="mx-auto mb-3"
+        />
+        <h1 className="text-2xl w-3/4 lg:w-1/2  mx-auto text-center">
+          تصميم كارت دعوه لحضور لقاء المستثمرين ورجال الاعمال
+        </h1>
 
-      <div className="text-center mt-7">
-        {cardTemplate.map((card, index) => (
-          <div key={index} id={card.id} className="mb-5">
-            <div className="flex flex-col justify-center items-center gap-2 flex-wrap">
-              <span className="rounded-full bg-[#84923a] shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
-                {card.id}
-              </span>
-              <div className="mb-8 block text-[1.5rem]">
-                <h2 className="mb-2 block text-[1.5rem]">{card.title}</h2>
-              </div>
-              {card.id === 1 ? (
-                <div className="flex justify-center items-center gap-2 flex-wrap">
-                  {selectCardTemplate}
+        <div className="text-center mt-7">
+          {cardTemplate.map((card, index) => (
+            <div key={index} id={card.id} className="mb-5">
+              <div className="flex flex-col justify-center items-center gap-2 flex-wrap">
+                <span className="rounded-full bg-[#84923a] shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
+                  {card.id}
+                </span>
+                <div className="mb-8 block text-[1.5rem]">
+                  <h2 className="mb-2 block text-[1.5rem]">{card.title}</h2>
                 </div>
-              ) : card.id === 2 ? (
-                <Form
-                  type="invitation"
-                  data={data}
-                  position={position}
-                  pClick={(event) => setPosition(event.target.value)}
-                  dClick={(event) => setData(event.target.value)}
-                />
-              ) : (
-                <div
-                  ref={elementRef}
-                  className=" flex justify-center items-center w-[80%] mx-auto lg:w-full mb-10 relative"
-                  id="result"
-                >
-                  <canvas
-                    ref={canvasRef}
-                    width={1000}
-                    height={1400}
-                    className="text-center"
+                {card.id === 1 ? (
+                  <div className="flex justify-center items-center gap-2 flex-wrap">
+                    {selectCardTemplate}
+                  </div>
+                ) : card.id === 2 ? (
+                  <Form
+                    type="invitation"
+                    data={data}
+                    position={position}
+                    pClick={(event) => setPosition(event.target.value)}
+                    dClick={(event) => setData(event.target.value)}
                   />
-                </div>
-              )}
+                ) : (
+                  <div
+                    ref={elementRef}
+                    className=" flex justify-center items-center w-[80%] mx-auto lg:w-full mb-10 relative"
+                    id="result"
+                  >
+                    <canvas
+                      ref={canvasRef}
+                      width={1000}
+                      height={1400}
+                      className="text-center"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-        <a
-          id="download-image-link"
-          href="download-link"
-          onClick={htmlToImageConvert}
-          className="bg-[#83923b] text-white px-4 py-4 rounded-lg mb-7 block w-[80%] mx-auto transition-all duration-300 hover:bg-[#6b7830] hover:scale-105"
-        >
-          تحميل البطاقة
-        </a>
+          ))}
+          <a
+            id="download-image-link"
+            href="download-link"
+            onClick={htmlToImageConvert}
+            className="bg-[#83923b] text-white px-4 py-4 rounded-lg mb-7 block w-[80%] mx-auto transition-all duration-300 hover:bg-[#6b7830] hover:scale-105"
+          >
+            تحميل البطاقة
+          </a>
+        </div>
       </div>
-    </div>
+    </ClientProvider>
   );
 };
 export default Invitation;

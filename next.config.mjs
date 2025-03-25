@@ -7,6 +7,11 @@ const nextConfig = {
     loader: "custom",
     loaderFile: "./ImageLoader.js",
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["localhost:3000"],
+    },
+  },
 };
 
 export default nextConfig;

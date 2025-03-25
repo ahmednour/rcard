@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { decrypt } from "./app/lib/session";
 
@@ -10,7 +9,7 @@ export default async function middleware(req) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  const cookie = cookies().get("session")?.value;
+  const cookie = req.cookies.get("session")?.value;
   const session = await decrypt(cookie);
 
   if (isProtectedRoute && !session?.userId) {

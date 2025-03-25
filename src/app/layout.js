@@ -1,9 +1,14 @@
 import "./globals.css";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata = {
   title: "كارت معايدة",
   description: "كارت معايدة أمانه منطقة نجران",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   icons: {
     icon: "/fav.ico",
     shortcut: "/fav.ico",
