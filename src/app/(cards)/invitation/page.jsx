@@ -5,7 +5,7 @@ import NextImage from "next/image";
 import { logout } from "../../login/actions";
 import VisitorCounter from "../../../components/VisitorCounter";
 import DownloadCounter from "../../../components/DownloadCounter";
-import { useDownload } from "../../lib/downloadContext";
+import { useDownload } from "../../../lib/downloadContext";
 
 const Invitation = () => {
   const bg10Src = "/bg10.jpeg";

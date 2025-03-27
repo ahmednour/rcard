@@ -8,7 +8,7 @@ import MilestoneNotification from "../../../components/MilestoneNotification";
 import SocialShareButtons from "../../../components/SocialShareButtons";
 import FeedbackForm from "../../../components/FeedbackForm";
 import ImageSlider from "../../../components/card/ImageSlider";
-import { useDownload } from "../../lib/downloadContext";
+import { useDownload } from "../../../lib/downloadContext";
 import Link from "next/link";
 
 const Holiday = () => {
