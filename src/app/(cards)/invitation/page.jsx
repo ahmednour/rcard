@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Form from "@/components/form/Form";
 import NextImage from "next/image";
 import VisitorCounter from "@/components/VisitorCounter";
@@ -7,18 +7,143 @@ import DownloadCounter from "@/components/DownloadCounter";
 import { useDownload } from "@/lib/downloadContext";
 import Link from "next/link";
 
+// Preload the default image to get its actual dimensions before the component mounts
+const preloadDefaultImage = (src) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () =>
+      resolve({
+        img,
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      });
+    img.onerror = () =>
+      resolve({
+        img: null,
+        width: 1000,
+        height: 1500,
+      });
+    img.src = src;
+  });
+};
+
 const Invitation = () => {
   const bg10Src = "/bg10.jpeg";
   const logoSrc = "/Najran-Municipality.svg";
   const images = useMemo(() => [bg10Src], []);
-  const [data, setData] = useState([]);
-  const [position, setPosition] = useState([]);
+  const [data, setData] = useState("");
+  const [position, setPosition] = useState("");
   const [selectedImage, setSelectedImage] = useState(bg10Src);
-  const [clickedId, setClickedId] = useState(null);
+  const [clickedId, setClickedId] = useState(1);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+  const imageRef = useRef(null);
   const { incrementDownloadCount } = useDownload();
+
+  // Load fonts first to ensure they're available for canvas
+  useEffect(() => {
+    // Check if the browser supports the Font Loading API
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        setFontsLoaded(true);
+      });
+    } else {
+      // Fallback for browsers without Font Loading API
+      setTimeout(() => {
+        setFontsLoaded(true);
+      }, 500);
+    }
+  }, []);
+
+  // Create new image and set up handlers for first render
+  useEffect(() => {
+    // Create a new image element
+    const img = new Image();
+    imageRef.current = img;
+
+    img.onload = () => {
+      setImageLoaded(true);
+      renderCanvas();
+    };
+
+    img.onerror = () => {
+      console.error("Failed to load image:", bg10Src);
+      setImageLoaded(false);
+    };
+
+    img.src = bg10Src;
+  }, []);
+
+  // Handle image change when selecting different template
+  useEffect(() => {
+    const img = imageRef.current;
+    if (img && img.src !== selectedImage) {
+      setImageLoaded(false);
+      img.src = selectedImage;
+    }
+  }, [selectedImage]);
+
+  // Function to render the canvas with current state
+  const renderCanvas = useCallback(() => {
+    if (!canvasRef.current || !imageRef.current || !imageRef.current.complete)
+      return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const img = imageRef.current;
+
+    // Always use the ACTUAL natural dimensions of the image directly
+    const canvasWidth = img.naturalWidth;
+    const canvasHeight = img.naturalHeight;
+
+    // Set canvas dimensions to match image exactly
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw image at its natural size
+    ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+
+    // Ensure text is drawn only after the image is properly displayed
+    requestAnimationFrame(() => {
+      // Text configuration
+      const isFirstTemplate = clickedId === 1;
+      const textY = Math.floor(canvasHeight * 0.42); // Name position
+      const dateY = Math.floor(canvasHeight * 0.58); // Date position
+
+      // Scale font size based on image height
+      const nameFontSize = Math.max(Math.floor(canvasHeight / 36), 36);
+      const dateFontSize = Math.max(Math.floor(canvasHeight / 42), 32);
+
+      // Draw name text
+      if (data && data.length > 0) {
+        ctx.font = `bold ${nameFontSize}px Alexandria, sans-serif`;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText(data, canvasWidth / 2, textY);
+      }
+
+      // Draw date/position text
+      if (position && position.length > 0) {
+        ctx.font = `${dateFontSize}px Alexandria, sans-serif`;
+        ctx.fillStyle = isFirstTemplate ? "#aa804e" : "white";
+        ctx.textAlign = "center";
+        ctx.fillText(position, canvasWidth / 2, dateY);
+      }
+    });
+  }, [data, position, clickedId]);
+
+  // Re-render canvas when image loads or text changes
+  useEffect(() => {
+    if (imageLoaded && fontsLoaded) {
+      renderCanvas();
+    }
+  }, [imageLoaded, fontsLoaded, renderCanvas]);
 
   // Hide success notification after a delay
   useEffect(() => {
@@ -31,68 +156,68 @@ const Invitation = () => {
     }
   }, [showSuccessNotification]);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-      const isFirstTemplate = clickedId === 1;
-      const textConfig = {
-        x: canvas.width / 2 + 0,
-        y: (canvas.height - 520) / 2,
-        color: "white",
-      };
-      const dateConfig = {
-        x: canvas.width / 2 + 0,
-        y: (canvas.height + 20) / 2 + 100,
-        color: "#fff",
-      };
-
-      ctx.font = "bold 36px Alexandria";
-      ctx.fillStyle = textConfig.color;
-      ctx.textAlign = "center";
-      ctx.fillText(data, textConfig.x, textConfig.y);
-
-      ctx.font = "32px Alexandria";
-      ctx.fillStyle = isFirstTemplate ? "#aa804e" : "#fff";
-      ctx.fillText(position, dateConfig.x, dateConfig.y + 40);
-    };
-    image.src = selectedImage;
-  }, [selectedImage, data, position, clickedId]);
-
-  // Make sure we're getting the download context properly
-  useEffect(() => {
-    console.log("Invitation page - useDownload hook result:", {
-      incrementDownloadCount,
-    });
-  }, [incrementDownloadCount]);
-
   // Handle download with proper download counter increment
   const htmlToImageConvert = (event) => {
-    let link = event.currentTarget;
-    link.download = "my-image-name.png";
-    let image = canvasRef.current.toDataURL("image/png");
-    link.href = image;
+    event.preventDefault();
 
-    // Increment download count when user downloads the image
+    const canvas = canvasRef.current;
+    const img = imageRef.current;
+    if (!canvas || !img || !img.complete) return;
+
+    // Make sure canvas is at full resolution for download
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+
+    // Redraw at full resolution
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // Add text
+    const isFirstTemplate = clickedId === 1;
+    const textY = Math.floor(canvas.height * 0.42);
+    const dateY = Math.floor(canvas.height * 0.58);
+
+    const nameFontSize = Math.max(Math.floor(canvas.height / 36), 36);
+    const dateFontSize = Math.max(Math.floor(canvas.height / 42), 32);
+
+    if (data && data.length > 0) {
+      ctx.font = `bold ${nameFontSize}px Alexandria, sans-serif`;
+      ctx.fillStyle = "white";
+      ctx.textAlign = "center";
+      ctx.fillText(data, canvas.width / 2, textY);
+    }
+
+    if (position && position.length > 0) {
+      ctx.font = `${dateFontSize}px Alexandria, sans-serif`;
+      ctx.fillStyle = isFirstTemplate ? "#aa804e" : "white";
+      ctx.textAlign = "center";
+      ctx.fillText(position, canvas.width / 2, dateY);
+    }
+
+    // Get the image and trigger download
+    const image = canvas.toDataURL("image/png");
+    const downloadLink = document.createElement("a");
+    downloadLink.href = image;
+    downloadLink.download = "امانة-نجران-بطاقة-دعوة.png";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    // Increment download count
     if (typeof incrementDownloadCount === "function") {
-      console.log("Calling incrementDownloadCount in invitation page");
       incrementDownloadCount();
-      console.log("Download count incremented in invitation page");
-    } else {
-      console.error(
-        "incrementDownloadCount is not a function:",
-        incrementDownloadCount
-      );
     }
 
     // Show success notification
     setShowSuccessNotification(true);
+
+    // Re-render the canvas for display
+    renderCanvas();
   };
 
   const [isActive, setActive] = useState(0);
+
   // card template
   const cardTemplate = [
     {
@@ -110,24 +235,48 @@ const Invitation = () => {
       title: "عاين البطاقة وحملها",
     },
   ];
+
   // select card template
   const selectCardTemplate = images.map((img, i) => (
-    <NextImage
-      src={img}
-      id={i + 1}
+    <div
       key={i}
-      priority
-      alt="cardImage"
-      width={400}
-      height={600}
-      className="w-full max-w-[400px] h-auto cursor-pointer"
-      onClick={() => {
-        setSelectedImage(img);
-        setActive(i);
-        setClickedId(i);
-      }}
-    />
+      className={`relative ${
+        isActive === i ? "ring-4 ring-[#84923a] rounded-lg" : ""
+      }`}
+    >
+      <NextImage
+        src={img}
+        id={i + 1}
+        priority={true}
+        alt="cardImage"
+        width={400}
+        height={600}
+        className="w-full max-w-[400px] h-auto cursor-pointer rounded-lg transition-all duration-300 hover:shadow-lg"
+        onClick={() => {
+          setSelectedImage(img);
+          setActive(i);
+          setClickedId(i + 1);
+        }}
+      />
+      {isActive === i && (
+        <div className="absolute top-2 right-2 bg-[#84923a] text-white rounded-full p-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      )}
+    </div>
   ));
+
   return (
     <div className="lg:max-w-4xl mx-auto pt-20">
       <VisitorCounter />
@@ -238,15 +387,29 @@ const Invitation = () => {
                 ) : (
                   <div
                     ref={elementRef}
-                    className=" flex justify-center items-center w-[80%] mx-auto lg:w-full mb-10 relative"
+                    className="flex justify-center items-center w-[80%] mx-auto lg:w-full mb-10 relative"
                     id="result"
+                    style={{ minHeight: "600px" }}
                   >
-                    <canvas
-                      ref={canvasRef}
-                      width={1000}
-                      height={1400}
-                      className="text-center"
-                    />
+                    {imageLoaded ? (
+                      <canvas
+                        ref={canvasRef}
+                        className="text-center max-w-full h-auto border rounded-lg shadow-md"
+                        style={{
+                          maxHeight: "80vh",
+                          maxWidth: "100%",
+                          objectFit: "contain",
+                          display: "block",
+                          margin: "0 auto",
+                          boxSizing: "border-box",
+                        }}
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-96 w-full">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#84923a] mb-4"></div>
+                        <p className="text-gray-600">جاري تحميل البطاقة...</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -265,4 +428,5 @@ const Invitation = () => {
     </div>
   );
 };
+
 export default Invitation;

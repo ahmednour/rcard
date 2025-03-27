@@ -35,8 +35,8 @@ const Holiday = () => {
   const canvasRef = useRef(null);
   const { incrementDownloadCount, saveFeedback } = useDownload();
   const [canvasDimensions, setCanvasDimensions] = useState({
-    width: 1000,
-    height: 1400,
+    width: 0,
+    height: 0,
   });
 
   // Hide success notification after a delay
@@ -74,6 +74,11 @@ const Holiday = () => {
           width: img.naturalWidth,
           height: img.naturalHeight,
         });
+        // Update canvas dimensions to match the actual image dimensions
+        setCanvasDimensions({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        });
       };
       img.src = selectedImage;
     }
@@ -90,6 +95,10 @@ const Holiday = () => {
         const initialImage = new Image();
         initialImage.crossOrigin = "Anonymous";
         initialImage.onload = () => {
+          // Set canvas dimensions to match the actual image dimensions
+          canvas.width = initialImage.naturalWidth;
+          canvas.height = initialImage.naturalHeight;
+
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(initialImage, 0, 0, canvas.width, canvas.height);
 
@@ -160,6 +169,10 @@ const Holiday = () => {
     const image = new Image();
     image.crossOrigin = "Anonymous";
     image.onload = () => {
+      // Set canvas dimensions to match the actual image dimensions
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
@@ -296,8 +309,18 @@ const Holiday = () => {
   // Replace the previous selectCardTemplate with the new Image Slider component
   const handleCardSelection = (index) => {
     setSelectedImage(images[index]);
-    setActive(index);
     setClickedId(index);
+    setActive(index);
+
+    // Update canvas dimensions based on selected image
+    const img = new Image();
+    img.onload = () => {
+      setCanvasDimensions({
+        width: img.naturalWidth,
+        height: img.naturalHeight,
+      });
+    };
+    img.src = images[index];
   };
 
   useEffect(() => {
@@ -447,7 +470,15 @@ const Holiday = () => {
                       ref={canvasRef}
                       width={canvasDimensions.width}
                       height={canvasDimensions.height}
-                      className="max-w-full h-auto"
+                      className="text-center max-w-full h-auto border rounded-lg shadow-md"
+                      style={{
+                        maxHeight: "80vh",
+                        maxWidth: "100%",
+                        objectFit: "contain",
+                        display: "block",
+                        margin: "0 auto",
+                        boxSizing: "border-box",
+                      }}
                     />
                   </div>
                 )}
