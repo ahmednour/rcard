@@ -8,6 +8,7 @@ const testUser = {
   id: "1",
   email: "a.noor@gmail.com",
   password: "12345678",
+  role: "user",
 };
 
 const loginSchema = z.object({
@@ -39,7 +40,7 @@ export async function login(prevState, formData) {
   console.log(testUser.id);
   console.log(testUser.email);
   console.log(testUser.password);
-  await createSession(testUser.id);
+  await createSession(testUser.id, testUser.role);
 
   redirect("/invitation");
 }

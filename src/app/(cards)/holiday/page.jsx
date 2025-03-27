@@ -2,17 +2,23 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Form from "../../../components/form/Form";
 import NextImage from "next/image";
-import bg1 from "@/public/bg1.jpg";
-import bg2 from "@/public/bg2.jpg";
-import bg3 from "@/public/bg3.jpg";
-import bg4 from "@/public/bg4.jpg";
-import bg5 from "@/public/bg5.jpg";
-import logo from "@/public/Najran-Municipality.svg";
 import VisitorCounter from "../../../components/VisitorCounter";
-import ClientProvider from "../../../components/ClientProvider";
+import DownloadCounter from "../../../components/DownloadCounter";
+import MilestoneNotification from "../../../components/MilestoneNotification";
+import SocialShareButtons from "../../../components/SocialShareButtons";
+import FeedbackForm from "../../../components/FeedbackForm";
+import ImageSlider from "../../../components/card/ImageSlider";
+import { useDownload } from "../../../lib/downloadContext";
+import Link from "next/link";
 
 const Holiday = () => {
-  const images = useMemo(() => [bg1, bg2, bg3, bg4, bg5], []);
+  const bg1Src = "/bg1.jpg";
+  const bg2Src = "/bg2.jpg";
+  const bg3Src = "/bg3.jpg";
+  const bg4Src = "/bg4.jpg";
+  const bg5Src = "/bg5.jpg";
+  const logoSrc = "/Najran-Municipality.svg";
+  const images = useMemo(() => [bg1Src, bg2Src, bg3Src, bg4Src, bg5Src], []);
   const [data, setData] = useState([]);
   const [position, setPosition] = useState([]);
   const [selectedImage, setSelectedImage] = useState(images[0]);
@@ -22,8 +28,38 @@ const Holiday = () => {
     width: 1344,
     height: 943,
   });
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [showSocialShare, setShowSocialShare] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+  const { incrementDownloadCount, saveFeedback } = useDownload();
+
+  // Hide success notification after a delay
+  useEffect(() => {
+    if (showSuccessNotification) {
+      const timer = setTimeout(() => {
+        setShowSuccessNotification(false);
+        // Show social share panel after success notification closes
+        setShowSocialShare(true);
+      }, 3000); // Hide after 3 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessNotification]);
+
+  // Hide social share panel after a delay and show feedback form
+  useEffect(() => {
+    if (showSocialShare) {
+      const timer = setTimeout(() => {
+        setShowSocialShare(false);
+        // Show feedback form after social share panel closes
+        setShowFeedbackForm(true);
+      }, 8000); // Hide after 8 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSocialShare]);
 
   // Load image dimensions when selected image changes
   useEffect(() => {
@@ -35,7 +71,7 @@ const Holiday = () => {
           height: img.naturalHeight,
         });
       };
-      img.src = selectedImage.src;
+      img.src = selectedImage;
     }
   }, [selectedImage]);
 
@@ -66,28 +102,28 @@ const Holiday = () => {
               x:
                 canvas.width / 2 +
                 (isFirstTemplate
-                  ? 250
-                  : isSecondTemplate
-                  ? 250
-                  : isThirdTemplate
-                  ? 50
-                  : isFourthTemplate
                   ? 0
+                  : isSecondTemplate
+                  ? 0
+                  : isThirdTemplate
+                  ? 260
+                  : isFourthTemplate
+                  ? 260
                   : isFifthTemplate
                   ? 0
                   : 100),
               y:
                 (canvas.height +
                   (isFirstTemplate
-                    ? 700
-                    : isSecondTemplate
-                    ? 700
-                    : isThirdTemplate
-                    ? 550
-                    : isFourthTemplate
                     ? 980
-                    : isFifthTemplate
+                    : isSecondTemplate
                     ? 20
+                    : isThirdTemplate
+                    ? 650
+                    : isFourthTemplate
+                    ? 700
+                    : isFifthTemplate
+                    ? 600
                     : 100)) /
                 2,
               color: "#f98500",
@@ -103,7 +139,7 @@ const Holiday = () => {
             ctx.fillText(position, textConfig.x, textConfig.y + 40);
           }
         };
-        initialImage.src = selectedImage.src;
+        initialImage.src = selectedImage;
       }
     }, 100);
 
@@ -161,27 +197,80 @@ const Holiday = () => {
           color: "#f98500",
         };
 
+        // Set font and style for name
         ctx.font = "bold 36px Alexandria";
         ctx.fillStyle = textConfig.color;
         ctx.textAlign = "center";
         ctx.fillText(data, textConfig.x, textConfig.y);
 
+        // Set font and style for position
         ctx.font = "25px Alexandria";
         ctx.fillStyle = "#8f5c22";
         ctx.fillText(position, textConfig.x, textConfig.y + 40);
       }
     };
-
-    // Ensure we're always using the current selectedImage
-    image.src = selectedImage.src;
+    image.src = selectedImage;
   }, [selectedImage, data, position, clickedId]);
+
+  // Make sure we're getting the download context properly
+  useEffect(() => {
+    console.log("Holiday page - useDownload hook result:", {
+      incrementDownloadCount,
+      saveFeedback,
+    });
+  }, [incrementDownloadCount, saveFeedback]);
 
   const htmlToImageConvert = (event) => {
     let link = event.currentTarget;
     link.download = "my-image-name.png";
     let image = canvasRef.current.toDataURL("image/png");
     link.href = image;
+
+    // Increment download count when user downloads the image
+    if (typeof incrementDownloadCount === "function") {
+      console.log("Calling incrementDownloadCount in holiday page");
+      incrementDownloadCount();
+      console.log("Download count incremented in holiday page");
+    } else {
+      console.error(
+        "incrementDownloadCount is not a function:",
+        incrementDownloadCount
+      );
+    }
+
+    // Show success notification
+    setShowSuccessNotification(true);
   };
+
+  // Close the social share panel
+  const handleShareClose = () => {
+    setShowSocialShare(false);
+    // Show feedback form after closing share panel
+    setShowFeedbackForm(true);
+  };
+
+  // Close the feedback form
+  const handleFeedbackClose = () => {
+    setShowFeedbackForm(false);
+  };
+
+  // Handle feedback submission
+  const handleFeedbackSubmit = (feedbackData) => {
+    return new Promise((resolve) => {
+      try {
+        saveFeedback(feedbackData);
+        setShowFeedbackForm(false);
+        // Display thank you message or another notification here if desired
+        setTimeout(() => {
+          resolve();
+        }, 500);
+      } catch (error) {
+        console.error("Error saving feedback:", error);
+        resolve(); // Still resolve to close the form even if there's an error
+      }
+    });
+  };
+
   // card template
   const cardTemplate = [
     {
@@ -199,30 +288,100 @@ const Holiday = () => {
       title: "عاين البطاقة وحملها",
     },
   ];
-  // select card template
-  const selectCardTemplate = images.map((img, i) => (
-    <NextImage
-      src={img}
-      id={i + 1}
-      key={i}
-      priority
-      alt="cardImage"
-      onClick={() => {
-        setSelectedImage(img);
-        setActive(i);
-        setClickedId(i); // Increment by 1 to match the card template IDs
-      }}
-      className={`h-[238.25px] w-[336px] cursor-pointer ${
-        isActive === i ? "border-[#cbe44c] border-[2px]" : ""
-      }`}
-    />
-  ));
+
+  // Replace the previous selectCardTemplate with the new Image Slider component
+  const handleCardSelection = (index) => {
+    setSelectedImage(images[index]);
+    setActive(index);
+    setClickedId(index);
+  };
+
   return (
-    <ClientProvider>
-      <div className="lg:max-w-4xl mx-auto pt-20">
-        <VisitorCounter />
+    <div className="lg:max-w-4xl mx-auto pt-20 pb-16">
+      <VisitorCounter />
+      <DownloadCounter />
+      <MilestoneNotification />
+
+      {/* Success Notification */}
+      {showSuccessNotification && (
+        <div className="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md animate-fade-in flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span>تم تحميل البطاقة بنجاح!</span>
+        </div>
+      )}
+
+      {/* Social Share Panel */}
+      <SocialShareButtons show={showSocialShare} onClose={handleShareClose} />
+
+      {/* Feedback Form */}
+      <FeedbackForm
+        show={showFeedbackForm}
+        onClose={handleFeedbackClose}
+        onSubmit={handleFeedbackSubmit}
+      />
+
+      <div className="relative">
+        <div className="absolute top-4 right-4 z-10 flex space-x-2 rtl:space-x-reverse">
+          <Link
+            href="/help"
+            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-3 rounded-lg text-xs flex items-center shadow-sm transition-all duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-3 w-3 ml-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            المساعدة
+          </Link>
+          <Link
+            href="/admin/login"
+            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-3 rounded-lg text-xs flex items-center shadow-sm transition-all duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-3 w-3 ml-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            الإدارة
+          </Link>
+        </div>
         <NextImage
-          src={logo}
+          src={logoSrc}
           alt="logo"
           width="200"
           height="100"
@@ -243,8 +402,12 @@ const Holiday = () => {
                   <h2 className="mb-2 block text-[1.5rem]">{card.title}</h2>
                 </div>
                 {card.id === 1 ? (
-                  <div className="flex justify-center items-center gap-2 flex-wrap">
-                    {selectCardTemplate}
+                  <div className="flex justify-center items-center w-full">
+                    <ImageSlider
+                      images={images}
+                      onSelect={handleCardSelection}
+                      selectedIndex={isActive}
+                    />
                   </div>
                 ) : card.id === 2 ? (
                   <Form
@@ -271,17 +434,50 @@ const Holiday = () => {
               </div>
             </div>
           ))}
-          <a
-            id="download-image-link"
-            href="download-link"
-            onClick={htmlToImageConvert}
-            className="bg-[#83923b] text-white px-4 py-4 rounded-lg mb-7 block w-[80%] mx-auto transition-all duration-300 hover:bg-[#6b7830] hover:scale-105"
-          >
-            تحميل البطاقة
-          </a>
+          <div className="flex flex-col md:flex-row gap-3 w-[80%] mx-auto mb-7">
+            <a
+              id="download-image-link"
+              href="#"
+              onClick={htmlToImageConvert}
+              className="bg-[#83923b] text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-[#6b7830] hover:scale-105 flex-1"
+            >
+              <div className="flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                تحميل البطاقة
+              </div>
+            </a>
+
+            <button
+              onClick={() => setShowSocialShare(true)}
+              className="bg-blue-600 text-white px-4 py-4 rounded-lg block w-full md:w-auto transition-all duration-300 hover:bg-blue-700 hover:scale-105"
+            >
+              <div className="flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                </svg>
+                مشاركة
+              </div>
+            </button>
+          </div>
         </div>
       </div>
-    </ClientProvider>
+    </div>
   );
 };
 export default Holiday;

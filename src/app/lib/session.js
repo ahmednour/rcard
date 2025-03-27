@@ -6,9 +6,9 @@ const secretKey =
   process.env.SESSION_SECRET || "fallback_secret_key_for_development";
 const encodedKey = new TextEncoder().encode(secretKey);
 
-export async function createSession(userId) {
+export async function createSession(userId, role = "user") {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId, expiresAt });
+  const session = await encrypt({ userId, role, expiresAt });
 
   // Use the cookies function with await
   const cookieStore = await cookies();

@@ -1,6 +1,11 @@
 "use client";
 import { VisitorProvider } from "../lib/visitorContext";
+import { DownloadProvider } from "../lib/downloadContext";
 
 export default function ClientProvider({ children }) {
-  return <VisitorProvider>{children}</VisitorProvider>;
+  return (
+    <VisitorProvider>
+      <DownloadProvider>{children}</DownloadProvider>
+    </VisitorProvider>
+  );
 }
