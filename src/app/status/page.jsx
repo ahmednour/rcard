@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useDownload } from "../../../lib/downloadContext";
+import { useDownload } from "../../lib/downloadContext";
 import Link from "next/link";
 
 export default function StatusPage() {
