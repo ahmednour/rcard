@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./Modal.js";
-import VisitorCounter from "../../components/VisitorCounter";
-import ClientProvider from "../../components/ClientProvider";
+import VisitorCounter from "@/components/VisitorCounter";
+import ClientProvider from "@/components/ClientProvider";
 
 export default function HomePage({ session }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

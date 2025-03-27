@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { createSession, deleteSession } from "../../lib/session";
+import { createSession, deleteSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 
 // Admin credentials - in production, these would come from a database

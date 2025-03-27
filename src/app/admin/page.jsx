@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useDownload } from "../../lib/downloadContext";
-import { useVisitor } from "../../lib/visitorContext";
-import ClientProvider from "../../components/ClientProvider";
-import ReportGenerator from "../../components/ReportGenerator";
-import DashboardSummary from "../../components/DashboardSummary";
-import DownloadTimeAnalysis from "../../components/DownloadTimeAnalysis";
-import UserRetentionAnalysis from "../../components/UserRetentionAnalysis";
-import GeoDistributionPlaceholder from "../../components/GeoDistributionPlaceholder";
-import DownloadPrediction from "../../components/DownloadPrediction";
+import { useDownload } from "@/lib/downloadContext";
+import { useVisitor } from "@/lib/visitorContext";
+import ClientProvider from "@/components/ClientProvider";
+import ReportGenerator from "@/components/ReportGenerator";
+import DashboardSummary from "@/components/DashboardSummary";
+import DownloadTimeAnalysis from "@/components/DownloadTimeAnalysis";
+import UserRetentionAnalysis from "@/components/UserRetentionAnalysis";
+import GeoDistributionPlaceholder from "@/components/GeoDistributionPlaceholder";
+import DownloadPrediction from "@/components/DownloadPrediction";
 import Link from "next/link";
 import { adminLogout } from "./login/actions";
 

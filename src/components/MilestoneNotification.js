@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useDownload } from "../lib/downloadContext";
+import { useDownload } from "@/lib/downloadContext";
 
 export default function MilestoneNotification() {
   const [isClient, setIsClient] = useState(false);

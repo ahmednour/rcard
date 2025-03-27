@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useVisitor } from "../lib/visitorContext";
+import { useVisitor } from "@/lib/visitorContext";
 
 export default function VisitorCounter() {
   const [isClient, setIsClient] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useDownload } from "../lib/downloadContext";
+import { useDownload } from "@/lib/downloadContext";
 
 // The same milestone values from downloadContext
 const MILESTONES = [10, 50, 100, 500, 1000];

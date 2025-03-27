@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useDownload } from "../lib/downloadContext";
+import { useDownload } from "@/lib/downloadContext";
 
 const UserRetentionAnalysis = () => {
   const { downloadHistory } = useDownload();

@@ -1,5 +1,5 @@
 import React from "react";
-import { useDownload } from "../lib/downloadContext";
+import { useDownload } from "@/lib/downloadContext";
 
 const ReportGenerator = () => {
   const { downloadHistory, feedbackData } = useDownload();

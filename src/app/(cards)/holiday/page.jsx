@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
-import Form from "../../../components/form/Form";
+import Form from "@/components/form/Form";
 import NextImage from "next/image";
-import VisitorCounter from "../../../components/VisitorCounter";
-import DownloadCounter from "../../../components/DownloadCounter";
-import MilestoneNotification from "../../../components/MilestoneNotification";
-import SocialShareButtons from "../../../components/SocialShareButtons";
-import FeedbackForm from "../../../components/FeedbackForm";
-import ImageSlider from "../../../components/card/ImageSlider";
+import VisitorCounter from "@/components/VisitorCounter";
+import DownloadCounter from "@/components/DownloadCounter";
+import MilestoneNotification from "@/components/MilestoneNotification";
+import SocialShareButtons from "@/components/SocialShareButtons";
+import FeedbackForm from "@/components/FeedbackForm";
+import ImageSlider from "@/components/card/ImageSlider";
 import { useDownload } from "@/lib/downloadContext";
 import Link from "next/link";
 

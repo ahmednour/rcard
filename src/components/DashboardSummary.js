@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { useDownload } from "../lib/downloadContext";
-import { useVisitor } from "../lib/visitorContext";
+import { useDownload } from "@/lib/downloadContext";
+import { useVisitor } from "@/lib/visitorContext";
 
 const DashboardSummary = () => {
   const {

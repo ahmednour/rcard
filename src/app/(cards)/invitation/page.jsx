@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
-import Form from "../../../components/form/Form";
+import Form from "@/components/form/Form";
 import NextImage from "next/image";
 import { logout } from "../../login/actions";
-import VisitorCounter from "../../../components/VisitorCounter";
-import DownloadCounter from "../../../components/DownloadCounter";
+import VisitorCounter from "@/components/VisitorCounter";
+import DownloadCounter from "@/components/DownloadCounter";
 import { useDownload } from "@/lib/downloadContext";
 
 const Invitation = () => {
