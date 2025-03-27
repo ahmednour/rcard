@@ -34,6 +34,10 @@ const Holiday = () => {
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
   const { incrementDownloadCount, saveFeedback } = useDownload();
+  const [canvasDimensions, setCanvasDimensions] = useState({
+    width: 1000,
+    height: 1400,
+  });
 
   // Hide success notification after a delay
   useEffect(() => {
@@ -296,6 +300,22 @@ const Holiday = () => {
     setClickedId(index);
   };
 
+  useEffect(() => {
+    const updateDimensions = () => {
+      const containerWidth =
+        elementRef.current?.clientWidth || window.innerWidth * 0.8;
+      const aspectRatio = 1.4;
+      setCanvasDimensions({
+        width: Math.min(containerWidth, 1000),
+        height: Math.min(containerWidth * aspectRatio, 1400),
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
   return (
     <div className="lg:max-w-4xl mx-auto pt-20 pb-16">
       <VisitorCounter />
@@ -332,14 +352,14 @@ const Holiday = () => {
       />
 
       <div className="relative">
-        <div className="absolute top-4 right-4 z-10 flex space-x-2 rtl:space-x-reverse">
+        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2 rtl:sm:space-x-reverse">
           <Link
             href="/help"
-            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-3 rounded-lg text-xs flex items-center shadow-sm transition-all duration-300"
+            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-2 sm:px-3 rounded-lg text-[10px] sm:text-xs flex items-center shadow-sm transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 ml-1"
+              className="h-2.5 w-2.5 sm:h-3 sm:w-3 ml-0.5 sm:ml-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -355,11 +375,11 @@ const Holiday = () => {
           </Link>
           <Link
             href="/admin/login"
-            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-3 rounded-lg text-xs flex items-center shadow-sm transition-all duration-300"
+            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-2 sm:px-3 rounded-lg text-[10px] sm:text-xs flex items-center shadow-sm transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 ml-1"
+              className="h-2.5 w-2.5 sm:h-3 sm:w-3 ml-0.5 sm:ml-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -425,9 +445,9 @@ const Holiday = () => {
                   >
                     <canvas
                       ref={canvasRef}
-                      width={imageDimensions.width}
-                      height={imageDimensions.height}
-                      className="text-center"
+                      width={canvasDimensions.width}
+                      height={canvasDimensions.height}
+                      className="max-w-full h-auto"
                     />
                   </div>
                 )}

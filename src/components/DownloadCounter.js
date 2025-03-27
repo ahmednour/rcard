@@ -43,13 +43,13 @@ export default function DownloadCounter() {
 
   console.log("DownloadCounter rendered with count:", count);
   return (
-    <div className="absolute top-16 left-4 bg-white/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-      <div className="flex items-center mb-2">
+    <div className="absolute top-2 sm:top-2 right-2 sm:right-4 bg-white/80 backdrop-blur-sm rounded-lg px-2 sm:px-4 py-2 sm:py-3 shadow-md z-10">
+      <div className="flex items-center mb-1 sm:mb-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          className="w-5 h-5 text-[#83923b] mr-2"
+          className="w-4 h-4 sm:w-5 sm:h-5 text-[#83923b] mr-1 sm:mr-2"
         >
           <path
             fillRule="evenodd"
@@ -57,12 +57,12 @@ export default function DownloadCounter() {
             clipRule="evenodd"
           />
         </svg>
-        <p className="text-sm font-semibold text-gray-700 text-left flex items-center">
+        <p className="text-xs sm:text-sm font-semibold text-gray-700 text-left flex items-center">
           عدد التحميلات: <span className="text-[#83923b] mx-1">{count}</span>
         </p>
       </div>
-      <div className="flex items-center pl-7">
-        <p className="text-xs text-gray-600 text-left">
+      <div className="flex items-center pl-3 sm:pl-7">
+        <p className="text-[10px] sm:text-xs text-gray-600 text-left">
           اليوم:{" "}
           <span className="font-medium text-[#83923b]">{todayCount}</span>
         </p>

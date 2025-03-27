@@ -38,8 +38,8 @@ export default function VisitorCounter() {
   if (!isClient) return null;
 
   return (
-    <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-md">
-      <p className="text-sm font-semibold text-gray-700 text-left">
+    <div className="absolute top-2 sm:top-2 left-2 sm:left-4 bg-white/80 backdrop-blur-sm rounded-lg px-2 sm:px-4 py-1 sm:py-2 shadow-md z-10 text-xs sm:text-sm">
+      <p className="font-semibold text-gray-700 text-left">
         عدد الزوار: {count}
       </p>
     </div>
