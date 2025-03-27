@@ -5,19 +5,39 @@ import NextImage from "next/image";
 import bg1 from "@/public/bg1.jpg";
 import bg2 from "@/public/bg2.jpg";
 import bg3 from "@/public/bg3.jpg";
+import bg4 from "@/public/bg4.jpg";
+import bg5 from "@/public/bg5.jpg";
 import logo from "@/public/Najran-Municipality.svg";
 import VisitorCounter from "../../../components/VisitorCounter";
 import ClientProvider from "../../../components/ClientProvider";
 
 const Holiday = () => {
-  const images = useMemo(() => [bg1, bg2, bg3], []);
+  const images = useMemo(() => [bg1, bg2, bg3, bg4, bg5], []);
   const [data, setData] = useState([]);
   const [position, setPosition] = useState([]);
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [clickedId, setClickedId] = useState(0);
   const [isActive, setActive] = useState(0);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 1344,
+    height: 943,
+  });
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+
+  // Load image dimensions when selected image changes
+  useEffect(() => {
+    if (selectedImage) {
+      const img = new Image();
+      img.onload = () => {
+        setImageDimensions({
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        });
+      };
+      img.src = selectedImage.src;
+    }
+  }, [selectedImage]);
 
   // Initial load effect to ensure bg1 is loaded first
   useEffect(() => {
@@ -35,10 +55,42 @@ const Holiday = () => {
 
           // Also draw any initial text if needed
           if (data.length > 0 || position.length > 0) {
+            // Use same text configuration logic as the main rendering effect
+            const isFirstTemplate = clickedId === 0;
+            const isSecondTemplate = clickedId === 1;
+            const isThirdTemplate = clickedId === 2;
+            const isFourthTemplate = clickedId === 3;
+            const isFifthTemplate = clickedId === 4;
+
             const textConfig = {
-              x: canvas.width / 2 + 300,
-              y: (canvas.height + 500) / 2,
-              color: "#fbb040",
+              x:
+                canvas.width / 2 +
+                (isFirstTemplate
+                  ? 250
+                  : isSecondTemplate
+                  ? 250
+                  : isThirdTemplate
+                  ? 50
+                  : isFourthTemplate
+                  ? 0
+                  : isFifthTemplate
+                  ? 0
+                  : 100),
+              y:
+                (canvas.height +
+                  (isFirstTemplate
+                    ? 700
+                    : isSecondTemplate
+                    ? 700
+                    : isThirdTemplate
+                    ? 550
+                    : isFourthTemplate
+                    ? 980
+                    : isFifthTemplate
+                    ? 20
+                    : 100)) /
+                2,
+              color: "#f98500",
             };
 
             ctx.font = "bold 36px Alexandria";
@@ -47,17 +99,18 @@ const Holiday = () => {
             ctx.fillText(data, textConfig.x, textConfig.y);
 
             ctx.font = "25px Alexandria";
-            ctx.fillStyle = "#ab8150";
+            ctx.fillStyle = "#8f5c22";
             ctx.fillText(position, textConfig.x, textConfig.y + 40);
           }
         };
-        initialImage.src = images[0].src;
+        initialImage.src = selectedImage.src;
       }
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [images, data, position]);
+  }, [selectedImage, data, position, clickedId]);
 
+  // Main rendering effect that updates when image, text, or position changes
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -70,40 +123,59 @@ const Holiday = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      const isFirstTemplate = clickedId === 0;
-      const isSecondTemplate = clickedId === 1;
-      const isThirdTemplate = clickedId === 2;
+      if (data.length > 0 || position.length > 0) {
+        const isFirstTemplate = clickedId === 0;
+        const isSecondTemplate = clickedId === 1;
+        const isThirdTemplate = clickedId === 2;
+        const isFourthTemplate = clickedId === 3;
+        const isFifthTemplate = clickedId === 4;
 
-      const textConfig = {
-        x:
-          canvas.width / 2 +
-          (isFirstTemplate ? 300 : isSecondTemplate ? 250 : 50),
-        y:
-          (canvas.height +
-            (isFirstTemplate ? 500 : isSecondTemplate ? 520 : 450)) /
-          2,
-        color: isFirstTemplate
-          ? "#fbb040"
-          : isSecondTemplate
-          ? "#fbb040"
-          : "#fbb040",
-      };
+        const textConfig = {
+          x:
+            canvas.width / 2 +
+            (isFirstTemplate
+              ? 250
+              : isSecondTemplate
+              ? 500
+              : isThirdTemplate
+              ? 200
+              : isFourthTemplate
+              ? 150
+              : isFifthTemplate
+              ? 100
+              : 100),
+          y:
+            (canvas.height +
+              (isFirstTemplate
+                ? 700
+                : isSecondTemplate
+                ? 520
+                : isThirdTemplate
+                ? 450
+                : isFourthTemplate
+                ? 380
+                : isFifthTemplate
+                ? 310
+                : 100)) /
+            2,
+          color: "#f98500",
+        };
 
-      ctx.font = "bold 36px Alexandria";
-      ctx.fillStyle = textConfig.color;
-      ctx.textAlign = "center";
-      ctx.fillText(data, textConfig.x, textConfig.y);
+        ctx.font = "bold 36px Alexandria";
+        ctx.fillStyle = textConfig.color;
+        ctx.textAlign = "center";
+        ctx.fillText(data, textConfig.x, textConfig.y);
 
-      ctx.font = "25px Alexandria";
-      ctx.fillStyle = isFirstTemplate
-        ? "#ab8150"
-        : isSecondTemplate
-        ? "#ab8150"
-        : "#ab8150";
-      ctx.fillText(position, textConfig.x, textConfig.y + 40);
+        ctx.font = "25px Alexandria";
+        ctx.fillStyle = "#8f5c22";
+        ctx.fillText(position, textConfig.x, textConfig.y + 40);
+      }
     };
-    image.src = selectedImage?.src || images[0].src;
+
+    // Ensure we're always using the current selectedImage
+    image.src = selectedImage.src;
   }, [selectedImage, data, position, clickedId]);
+
   const htmlToImageConvert = (event) => {
     let link = event.currentTarget;
     link.download = "my-image-name.png";
@@ -190,8 +262,8 @@ const Holiday = () => {
                   >
                     <canvas
                       ref={canvasRef}
-                      width={1344}
-                      height={943}
+                      width={imageDimensions.width}
+                      height={imageDimensions.height}
                       className="text-center"
                     />
                   </div>
