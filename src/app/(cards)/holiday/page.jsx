@@ -187,28 +187,28 @@ const Holiday = () => {
           x:
             canvas.width / 2 +
             (isFirstTemplate
-              ? 250
+              ? 0
               : isSecondTemplate
-              ? 500
+              ? 0
               : isThirdTemplate
-              ? 200
+              ? 260
               : isFourthTemplate
-              ? 150
+              ? 260
               : isFifthTemplate
-              ? 100
+              ? 0
               : 100),
           y:
             (canvas.height +
               (isFirstTemplate
-                ? 700
+                ? 980
                 : isSecondTemplate
-                ? 520
+                ? 20
                 : isThirdTemplate
-                ? 450
+                ? 650
                 : isFourthTemplate
-                ? 380
+                ? 700
                 : isFifthTemplate
-                ? 310
+                ? 600
                 : 100)) /
             2,
           color: "#f98500",
