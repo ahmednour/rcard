@@ -40,6 +40,7 @@ const Holiday = () => {
     width: 0,
     height: 0,
   });
+  const [shareImageData, setShareImageData] = useState(null);
 
   // Hide success notification after a delay
   useEffect(() => {
@@ -228,6 +229,12 @@ const Holiday = () => {
         }
 
         console.log("Canvas rendered successfully");
+
+        // After drawing everything on the canvas
+        if (canvasRef.current) {
+          const dataUrl = canvasRef.current.toDataURL("image/png");
+          setShareImageData(dataUrl);
+        }
       } catch (error) {
         console.error("Error rendering canvas:", error);
       } finally {
@@ -587,7 +594,11 @@ const Holiday = () => {
       )}
 
       {/* Social Share Panel */}
-      <SocialShareButtons show={showSocialShare} onClose={handleShareClose} />
+      <SocialShareButtons
+        show={showSocialShare}
+        onClose={handleShareClose}
+        imageDataUrl={shareImageData}
+      />
 
       {/* Feedback Form */}
       <FeedbackForm

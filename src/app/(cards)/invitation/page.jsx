@@ -6,6 +6,7 @@ import VisitorCounter from "@/components/VisitorCounter";
 import DownloadCounter from "@/components/DownloadCounter";
 import { useDownload } from "@/lib/downloadContext";
 import Link from "next/link";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 // Preload the default image to get its actual dimensions before the component mounts
 const preloadDefaultImage = (src) => {
@@ -42,6 +43,8 @@ const Invitation = () => {
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
   const { incrementDownloadCount } = useDownload();
+  const [showSocialShare, setShowSocialShare] = useState(false);
+  const [shareImageData, setShareImageData] = useState(null);
 
   // Load fonts first to ensure they're available for canvas
   useEffect(() => {
@@ -135,6 +138,14 @@ const Invitation = () => {
         ctx.textAlign = "center";
         ctx.fillText(position, canvasWidth / 2, dateY);
       }
+
+      // After drawing everything
+      requestAnimationFrame(() => {
+        if (canvasRef.current) {
+          const dataUrl = canvasRef.current.toDataURL("image/png");
+          setShareImageData(dataUrl);
+        }
+      });
     });
   }, [data, position, clickedId]);
 
@@ -277,10 +288,21 @@ const Invitation = () => {
     </div>
   ));
 
+  const handleShareClose = () => {
+    setShowSocialShare(false);
+  };
+
   return (
     <div className="lg:max-w-4xl mx-auto pt-20">
       <VisitorCounter />
       <DownloadCounter />
+
+      {/* Social Share Panel */}
+      <SocialShareButtons
+        show={showSocialShare}
+        onClose={handleShareClose}
+        imageDataUrl={shareImageData}
+      />
 
       {/* Success Notification */}
       {showSuccessNotification && (
@@ -415,14 +437,47 @@ const Invitation = () => {
               </div>
             </div>
           ))}
-          <a
-            id="download-image-link"
-            href="#"
-            onClick={htmlToImageConvert}
-            className="bg-[#83923b] text-white px-4 py-4 rounded-lg mb-7 block w-[80%] mx-auto transition-all duration-300 hover:bg-[#6b7830] hover:scale-105"
-          >
-            تحميل البطاقة
-          </a>
+          <div className="flex gap-3 w-[80%] mx-auto mb-7">
+            <a
+              id="download-image-link"
+              href="#"
+              onClick={htmlToImageConvert}
+              className="bg-[#83923b] text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-[#6b7830] hover:scale-105 flex-1"
+            >
+              <div className="flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                تحميل البطاقة
+              </div>
+            </a>
+
+            <button
+              onClick={() => setShowSocialShare(true)}
+              className="bg-blue-600 text-white px-4 py-4 rounded-lg block w-full md:w-auto transition-all duration-300 hover:bg-blue-700 hover:scale-105"
+            >
+              <div className="flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                </svg>
+                مشاركة
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>
