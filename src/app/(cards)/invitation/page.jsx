@@ -5,35 +5,16 @@ import NextImage from "next/image";
 import VisitorCounter from "@/components/VisitorCounter";
 import DownloadCounter from "@/components/DownloadCounter";
 import { useDownload } from "@/lib/downloadContext";
-import Link from "next/link";
+import MilestoneNotification from "@/components/MilestoneNotification";
 import SocialShareButtons from "@/components/SocialShareButtons";
-
-// Preload the default image to get its actual dimensions before the component mounts
-const preloadDefaultImage = (src) => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () =>
-      resolve({
-        img,
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-      });
-    img.onerror = () =>
-      resolve({
-        img: null,
-        width: 1000,
-        height: 1500,
-      });
-    img.src = src;
-  });
-};
+import FeedbackForm from "@/components/FeedbackForm";
 
 const Invitation = () => {
   const bg10Src = "/bg10.jpeg";
   const logoSrc = "/Najran-Municipality.svg";
   const images = useMemo(() => [bg10Src], []);
   const [data, setData] = useState("");
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState("أمانة منطقة نجران");
   const [selectedImage, setSelectedImage] = useState(bg10Src);
   const [clickedId, setClickedId] = useState(1);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
@@ -42,8 +23,9 @@ const Invitation = () => {
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
   const imageRef = useRef(null);
-  const { incrementDownloadCount } = useDownload();
+  const { incrementDownloadCount, saveFeedback } = useDownload();
   const [showSocialShare, setShowSocialShare] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [shareImageData, setShareImageData] = useState(null);
 
   // Load fonts first to ensure they're available for canvas
@@ -156,16 +138,26 @@ const Invitation = () => {
     }
   }, [imageLoaded, fontsLoaded, renderCanvas]);
 
-  // Hide success notification after a delay
+  // Hide success notification after a delay → show social share → show feedback
   useEffect(() => {
     if (showSuccessNotification) {
       const timer = setTimeout(() => {
         setShowSuccessNotification(false);
-      }, 3000); // Hide after 3 seconds
-
+        setShowSocialShare(true);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [showSuccessNotification]);
+
+  useEffect(() => {
+    if (showSocialShare) {
+      const timer = setTimeout(() => {
+        setShowSocialShare(false);
+        setShowFeedbackForm(true);
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSocialShare]);
 
   // Handle download with proper download counter increment
   const htmlToImageConvert = (event) => {
@@ -217,7 +209,7 @@ const Invitation = () => {
 
     // Increment download count
     if (typeof incrementDownloadCount === "function") {
-      incrementDownloadCount();
+      incrementDownloadCount(null, data, position);
     }
 
     // Show success notification
@@ -292,10 +284,17 @@ const Invitation = () => {
     setShowSocialShare(false);
   };
 
+  const handleFeedbackSubmit = (feedbackData) => {
+    return saveFeedback(feedbackData).then(() => {
+      setShowFeedbackForm(false);
+    });
+  };
+
   return (
     <div className="lg:max-w-4xl mx-auto pt-20">
       <VisitorCounter />
       <DownloadCounter />
+      <MilestoneNotification />
 
       {/* Social Share Panel */}
       <SocialShareButtons
@@ -304,12 +303,19 @@ const Invitation = () => {
         imageDataUrl={shareImageData}
       />
 
+      {/* Feedback Form */}
+      <FeedbackForm
+        show={showFeedbackForm}
+        onClose={() => setShowFeedbackForm(false)}
+        onSubmit={handleFeedbackSubmit}
+      />
+
       {/* Success Notification */}
       {showSuccessNotification && (
         <div className="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-md animate-fade-in flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-2"
+            className="h-5 w-5 ml-2"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -324,55 +330,6 @@ const Invitation = () => {
       )}
 
       <div className="relative">
-        <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2 rtl:sm:space-x-reverse">
-          <Link
-            href="/help"
-            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-2 sm:px-3 rounded-lg text-[10px] sm:text-xs flex items-center shadow-sm transition-all duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-2.5 w-2.5 sm:h-3 sm:w-3 ml-0.5 sm:ml-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            المساعدة
-          </Link>
-          <Link
-            href="/admin/login"
-            className="bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-700 py-1 px-2 sm:px-3 rounded-lg text-[10px] sm:text-xs flex items-center shadow-sm transition-all duration-300"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-2.5 w-2.5 sm:h-3 sm:w-3 ml-0.5 sm:ml-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            الإدارة
-          </Link>
-        </div>
-
         <NextImage
           src={logoSrc}
           alt="logo"
@@ -447,7 +404,7 @@ const Invitation = () => {
               <div className="flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
+                  className="h-5 w-5 ml-2"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -468,7 +425,7 @@ const Invitation = () => {
               <div className="flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
+                  className="h-5 w-5 ml-2"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >

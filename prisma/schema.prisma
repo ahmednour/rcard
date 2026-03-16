@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typedClient {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Occasion {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  templates Template[]
+
+  @@map("occasions")
+}
+
+model Template {
+  id         String     @id @default(cuid())
+  occasionId String
+  occasion   Occasion   @relation(fields: [occasionId], references: [id], onDelete: Cascade)
+  imagePath  String
+  nameX      Float
+  nameY      Float
+  deptX      Float
+  deptY      Float
+  fontSize       Int        @default(36)
+  fontColor      String     @default("#f98500")
+  fontFamily     String     @default("Alexandria")
+  deptFontSize   Int        @default(26)
+  deptFontColor  String     @default("#8f5c22")
+  deptFontFamily String     @default("Alexandria")
+  isActive   Boolean    @default(true)
+  order      Int        @default(0)
+  createdAt  DateTime   @default(now())
+  downloads  Download[]
+
+  @@map("templates")
+}
+
+model Download {
+  id         String   @id @default(cuid())
+  templateId String
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  userName   String
+  deptName   String   @default("")
+  device     String   @default("")
+  browser    String   @default("")
+  os         String   @default("")
+  createdAt  DateTime @default(now())
+
+  @@map("downloads")
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@map("feedbacks")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admins")
+}
+
+model Visitor {
+  id        String   @id @default(cuid())
+  page      String   @default("/")
+  createdAt DateTime @default(now())
+
+  @@map("visitors")
+}

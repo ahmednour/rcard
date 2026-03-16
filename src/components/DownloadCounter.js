@@ -3,45 +3,21 @@ import { useState, useEffect } from "react";
 import { useDownload } from "@/lib/downloadContext";
 
 export default function DownloadCounter() {
-  console.log("DownloadCounter component rendering");
   const [isClient, setIsClient] = useState(false);
-  const [count, setCount] = useState(0);
   const [todayCount, setTodayCount] = useState(0);
+  const { downloadCount } = useDownload();
 
-  // Get the download count and functions from context
-  const { downloadCount, getDownloadsToday } = useDownload();
-  console.log(
-    "In DownloadCounter: downloadCount from context =",
-    downloadCount
-  );
-
-  // Handle client-side rendering to avoid hydration mismatch
   useEffect(() => {
-    console.log("DownloadCounter useEffect running");
     setIsClient(true);
+    // جلب تحميلات اليوم من الـ API
+    fetch("/api/downloads/stats")
+      .then((res) => res.json())
+      .then((data) => setTodayCount(data.today || 0))
+      .catch(() => {});
+  }, [downloadCount]);
 
-    // Set the count from context
-    setCount(downloadCount);
+  if (!isClient) return null;
 
-    // Get today's downloads
-    const today = getDownloadsToday();
-    setTodayCount(today);
-
-    console.log(
-      "DownloadCounter state updated: count =",
-      downloadCount,
-      "today =",
-      today
-    );
-  }, [downloadCount, getDownloadsToday]);
-
-  // Only render on client side to prevent hydration mismatch
-  if (!isClient) {
-    console.log("DownloadCounter not rendered yet (server-side)");
-    return null;
-  }
-
-  console.log("DownloadCounter rendered with count:", count);
   return (
     <div className="absolute top-2 sm:top-2 right-2 sm:right-4 bg-white/80 backdrop-blur-sm rounded-lg px-2 sm:px-4 py-2 sm:py-3 shadow-md z-10">
       <div className="flex items-center mb-1 sm:mb-2">
@@ -58,7 +34,7 @@ export default function DownloadCounter() {
           />
         </svg>
         <p className="text-xs sm:text-sm font-semibold text-gray-700 text-left flex items-center">
-          عدد التحميلات: <span className="text-[#83923b] mx-1">{count}</span>
+          عدد التحميلات: <span className="text-[#83923b] mx-1">{downloadCount}</span>
         </p>
       </div>
       <div className="flex items-center pl-3 sm:pl-7">

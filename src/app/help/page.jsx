@@ -150,7 +150,7 @@ export default function HelpPage() {
                 <div className="bg-indigo-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-indigo-600 font-medium">١</span>
                 </div>
-                <div className="ml-4">
+                <div className="mr-4">
                   <h4 className="font-medium text-gray-800">
                     اختر البطاقة المناسبة
                   </h4>
@@ -165,7 +165,7 @@ export default function HelpPage() {
                 <div className="bg-indigo-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-indigo-600 font-medium">٢</span>
                 </div>
-                <div className="ml-4">
+                <div className="mr-4">
                   <h4 className="font-medium text-gray-800">تخصيص البطاقة</h4>
                   <p className="text-sm text-gray-600 mt-1">
                     أضف التفاصيل الشخصية مثل الاسم أو الرسالة الخاصة حسب البطاقة
@@ -178,7 +178,7 @@ export default function HelpPage() {
                 <div className="bg-indigo-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-indigo-600 font-medium">٣</span>
                 </div>
-                <div className="ml-4">
+                <div className="mr-4">
                   <h4 className="font-medium text-gray-800">
                     تحميل وحفظ البطاقة
                   </h4>
@@ -193,7 +193,7 @@ export default function HelpPage() {
                 <div className="bg-indigo-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-indigo-600 font-medium">٤</span>
                 </div>
-                <div className="ml-4">
+                <div className="mr-4">
                   <h4 className="font-medium text-gray-800">مشاركة البطاقة</h4>
                   <p className="text-sm text-gray-600 mt-1">
                     شارك البطاقة مع أحبائك عبر وسائل التواصل الاجتماعي أو
@@ -219,7 +219,7 @@ export default function HelpPage() {
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <div className="ml-3">
+                <div className="mr-3">
                   <h4 className="text-sm font-medium text-yellow-800">
                     نصائح إضافية
                   </h4>

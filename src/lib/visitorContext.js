@@ -1,45 +1,39 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 
-// Create the context with a default value
 const VisitorContext = createContext({
   visitorCount: 0,
-  setVisitorCount: () => {},
 });
 
 export function VisitorProvider({ children }) {
   const [visitorCount, setVisitorCount] = useState(0);
 
   useEffect(() => {
-    // Client-side only code
     if (typeof window === "undefined") return;
 
-    try {
-      // Get the current count from localStorage
-      const currentCount = parseInt(
-        localStorage.getItem("visitorCount") || "0"
-      );
+    // جلب عدد الزوار من الـ API
+    fetch("/api/visitors/stats")
+      .then((res) => res.json())
+      .then((data) => setVisitorCount(data.total || 0))
+      .catch((err) => console.error("Error fetching visitor stats:", err));
 
-      // Only increment the count once per session
-      if (!sessionStorage.getItem("countedThisSession")) {
-        const newCount = currentCount + 1;
-        localStorage.setItem("visitorCount", newCount.toString());
-        sessionStorage.setItem("countedThisSession", "true");
-        setVisitorCount(newCount);
-      } else {
-        // Just use the existing count
-        setVisitorCount(currentCount);
-      }
-    } catch (error) {
-      console.error("Error accessing storage:", error);
-      // Use default value if there's an error
+    // تسجيل زيارة جديدة مرة واحدة لكل جلسة
+    if (!sessionStorage.getItem("countedThisSession")) {
+      fetch("/api/visitors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ page: window.location.pathname }),
+      })
+        .then(() => {
+          sessionStorage.setItem("countedThisSession", "true");
+          setVisitorCount((prev) => prev + 1);
+        })
+        .catch((err) => console.error("Error recording visitor:", err));
     }
-  }, []); // Run once when component mounts
-
-  const contextValue = { visitorCount, setVisitorCount };
+  }, []);
 
   return (
-    <VisitorContext.Provider value={contextValue}>
+    <VisitorContext.Provider value={{ visitorCount }}>
       {children}
     </VisitorContext.Provider>
   );
@@ -47,10 +41,8 @@ export function VisitorProvider({ children }) {
 
 export function useVisitor() {
   const context = useContext(VisitorContext);
-
   if (context === undefined) {
     throw new Error("useVisitor must be used within a VisitorProvider");
   }
-
   return context;
 }
