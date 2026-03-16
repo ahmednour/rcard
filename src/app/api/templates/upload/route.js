@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/app/lib/session";
-import { writeFile } from "fs/promises";
-import path from "path";
+import { supabase } from "@/lib/supabase";
 
 // POST /api/templates/upload — رفع صورة قالب
 export async function POST(request) {
@@ -41,11 +40,30 @@ export async function POST(request) {
     // إنشاء اسم فريد للملف
     const ext = file.name.split(".").pop();
     const fileName = `template-${Date.now()}.${ext}`;
-    const filePath = path.join(process.cwd(), "public", "templates", fileName);
+    const storagePath = `templates/${fileName}`;
 
-    await writeFile(filePath, buffer);
+    // رفع الملف إلى Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from("templates")
+      .upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
 
-    const imagePath = `/templates/${fileName}`;
+    if (uploadError) {
+      console.error("Supabase upload error:", uploadError);
+      return NextResponse.json(
+        { error: "حدث خطأ أثناء رفع الملف" },
+        { status: 500 }
+      );
+    }
+
+    // الحصول على الرابط العام
+    const { data: urlData } = supabase.storage
+      .from("templates")
+      .getPublicUrl(storagePath);
+
+    const imagePath = urlData.publicUrl;
 
     return NextResponse.json({ imagePath }, { status: 201 });
   } catch (error) {
