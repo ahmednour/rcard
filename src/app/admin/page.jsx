@@ -13,7 +13,7 @@ export default function AdminPage() {
         <div className="flex space-x-4 rtl:space-x-reverse flex-wrap gap-2">
           <Link
             href="/admin/occasions"
-            className="bg-[#83923b] text-white hover:bg-[#6b7830] py-2 px-4 rounded-lg text-sm"
+            className="bg-primary text-white hover:bg-primary-dark py-2 px-4 rounded-lg text-sm"
           >
             إدارة المناسبات
           </Link>
@@ -114,7 +114,7 @@ function StatsDisplay() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#84923a]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary"></div>
       </div>
     );
   }
@@ -191,7 +191,7 @@ function StatsDisplay() {
           <div className="flex gap-2">
             <button
               onClick={handleFilter}
-              className="bg-[#83923b] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#6b7830] flex-1"
+              className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-dark flex-1"
             >
               تطبيق
             </button>
@@ -266,11 +266,11 @@ function StatsDisplay() {
                       <tr key={o.id} className="border-t hover:bg-gray-50">
                         <td className="p-3 font-medium">{o.name}</td>
                         <td className="p-3 text-center text-gray-500">{o.templateCount}</td>
-                        <td className="p-3 text-center font-bold text-[#83923b]">{o.downloadCount}</td>
+                        <td className="p-3 text-center font-bold text-primary">{o.downloadCount}</td>
                         <td className="p-3 text-center">
                           <div className="flex items-center gap-2 justify-center">
                             <div className="w-20 bg-gray-200 rounded-full h-2">
-                              <div className="bg-[#83923b] h-2 rounded-full" style={{ width: `${pct}%` }}></div>
+                              <div className="bg-primary h-2 rounded-full" style={{ width: `${pct}%` }}></div>
                             </div>
                             <span className="text-xs text-gray-500">{pct}%</span>
                           </div>
@@ -298,7 +298,7 @@ function StatsDisplay() {
                     className="w-full h-24 object-cover rounded mb-2"
                   />
                   <p className="text-xs text-gray-500 truncate">{t.occasionName}</p>
-                  <p className="text-lg font-bold text-[#83923b]">{t.downloadCount}</p>
+                  <p className="text-lg font-bold text-primary">{t.downloadCount}</p>
                   <p className="text-xs text-gray-400">تحميل</p>
                 </div>
               ))}
@@ -314,7 +314,7 @@ function StatsDisplay() {
               {chartData.map(({ day, count }) => (
                 <div key={day} className="flex flex-col items-center flex-1">
                   <div
-                    className="bg-[#83923b] w-8 rounded-t-md"
+                    className="bg-primary w-8 rounded-t-md"
                     style={{
                       height: `${
                         count
@@ -407,7 +407,7 @@ function StatsDisplay() {
                   key={milestone}
                   className={`text-xs px-3 py-1 rounded-full ${
                     downloadCount >= milestone
-                      ? "bg-[#83923b] text-white"
+                      ? "bg-primary text-white"
                       : "bg-gray-300 text-gray-600"
                   }`}
                 >
@@ -504,7 +504,7 @@ function StatsDisplay() {
         <div className="border-t pt-6 flex gap-3 flex-wrap">
           <button
             onClick={fetchData}
-            className="bg-[#83923b] hover:bg-[#6b7830] text-white px-4 py-2 rounded-lg text-sm"
+            className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg text-sm"
           >
             تحديث البيانات
           </button>

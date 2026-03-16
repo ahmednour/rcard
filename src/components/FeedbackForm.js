@@ -65,7 +65,7 @@ export default function FeedbackForm({ show, onClose, onSubmit }) {
             <textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#83923b] focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="شاركنا ملاحظاتك أو اقتراحاتك (اختياري)"
               rows={3}
             ></textarea>

@@ -32,6 +32,7 @@ export default function OccasionPage() {
 
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
+  const loadedImageRef = useRef(null);
   const { incrementDownloadCount, saveFeedback } = useDownload();
 
   // جلب بيانات المناسبة
@@ -52,80 +53,67 @@ export default function OccasionPage() {
       .finally(() => setPageLoading(false));
   }, [slug]);
 
-  // رسم الكانفاس
-  const renderCanvas = useCallback(() => {
-    if (!canvasRef.current || !selectedTemplate) return;
+  // رسم النص على الكانفاس (الصورة محملة مسبقاً)
+  const drawText = useCallback(() => {
+    const img = loadedImageRef.current;
+    if (!canvasRef.current || !img || !selectedTemplate) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const t = selectedTemplate;
+
+    if (data) {
+      ctx.font = `bold ${t.fontSize}px ${t.fontFamily}`;
+      ctx.fillStyle = t.fontColor;
+      ctx.textAlign = "center";
+      ctx.fillText(data, canvas.width / 2 + t.nameX, (canvas.height + t.nameY) / 2);
+    }
+
+    if (position) {
+      ctx.font = `${t.deptFontSize || Math.round(t.fontSize * 0.7)}px ${t.deptFontFamily || t.fontFamily}`;
+      ctx.fillStyle = t.deptFontColor || "#8f5c22";
+      ctx.textAlign = "center";
+      ctx.fillText(position, canvas.width / 2 + t.deptX, (canvas.height + t.deptY) / 2);
+    }
+  }, [selectedTemplate, data, position]);
+
+  // تحميل الصورة عند تغيير القالب فقط
+  useEffect(() => {
+    if (!selectedTemplate) return;
+
     setIsLoading(true);
+    loadedImageRef.current = null;
 
     const img = new Image();
     img.crossOrigin = "Anonymous";
 
-    const loadingTimeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-
     img.onload = () => {
-      clearTimeout(loadingTimeout);
-
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      setCanvasDimensions({ width: img.naturalWidth, height: img.naturalHeight });
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      // رسم النص بالإحداثيات من الداتابيز
-      if (data || position) {
-        const t = selectedTemplate;
-
-        // الاسم
-        if (data) {
-          ctx.font = `bold ${t.fontSize}px ${t.fontFamily}`;
-          ctx.fillStyle = t.fontColor;
-          ctx.textAlign = "center";
-          const nameX = canvas.width / 2 + t.nameX;
-          const nameY = (canvas.height + t.nameY) / 2;
-          ctx.fillText(data, nameX, nameY);
-        }
-
-        // الإدارة
-        if (position) {
-          ctx.font = `${t.deptFontSize || Math.round(t.fontSize * 0.7)}px ${t.deptFontFamily || t.fontFamily}`;
-          ctx.fillStyle = t.deptFontColor || "#8f5c22";
-          ctx.textAlign = "center";
-          const deptX = canvas.width / 2 + t.deptX;
-          const deptY = (canvas.height + t.deptY) / 2;
-          ctx.fillText(position, deptX, deptY);
-        }
+      loadedImageRef.current = img;
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        setCanvasDimensions({ width: img.naturalWidth, height: img.naturalHeight });
       }
-
-      // حفظ صورة المشاركة
-      if (canvasRef.current) {
-        setShareImageData(canvasRef.current.toDataURL("image/png"));
-      }
-
+      drawText();
       setIsLoading(false);
     };
 
-    img.onerror = () => {
-      clearTimeout(loadingTimeout);
-      setIsLoading(false);
-    };
-
+    img.onerror = () => setIsLoading(false);
     img.src = selectedTemplate.imagePath;
-  }, [selectedTemplate, data, position]);
+  }, [selectedTemplate]);
 
-  // إعادة رسم الكانفاس عند تغيير البيانات
+  // إعادة رسم النص عند تغيير البيانات فقط (بدون إعادة تحميل الصورة)
   useEffect(() => {
-    if (selectedTemplate) {
-      renderCanvas();
+    if (loadedImageRef.current) {
+      drawText();
     }
-  }, [selectedTemplate, data, position, renderCanvas]);
+  }, [drawText]);
 
   // إخفاء إشعار النجاح
   useEffect(() => {
@@ -163,6 +151,7 @@ export default function OccasionPage() {
 
     const canvas = canvasRef.current;
     const dataUrl = canvas.toDataURL("image/png");
+    setShareImageData(dataUrl);
 
     const downloadLink = document.createElement("a");
     downloadLink.href = dataUrl;
@@ -188,7 +177,7 @@ export default function OccasionPage() {
   if (pageLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#84923a]"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
       </div>
     );
   }
@@ -198,7 +187,7 @@ export default function OccasionPage() {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen gap-4">
         <p className="text-xl text-gray-600">{error || "المناسبة غير موجودة"}</p>
-        <Link href="/" className="text-[#83923b] underline text-lg">العودة للرئيسية</Link>
+        <Link href="/" className="text-primary underline text-lg">العودة للرئيسية</Link>
       </div>
     );
   }
@@ -208,7 +197,7 @@ export default function OccasionPage() {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen gap-4">
         <p className="text-xl text-gray-600">لا توجد قوالب متاحة لهذه المناسبة</p>
-        <Link href="/" className="text-[#83923b] underline text-lg">العودة للرئيسية</Link>
+        <Link href="/" className="text-primary underline text-lg">العودة للرئيسية</Link>
       </div>
     );
   }
@@ -248,7 +237,7 @@ export default function OccasionPage() {
           {steps.map((step) => (
             <div key={step.id} className="mb-5">
               <div className="flex flex-col justify-center items-center gap-2 flex-wrap">
-                <span className="rounded-full bg-[#84923a] shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
+                <span className="rounded-full bg-primary shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
                   {step.id}
                 </span>
                 <div className="mb-8 block text-[1.5rem]">
@@ -290,7 +279,7 @@ export default function OccasionPage() {
                     />
                     {isLoading && (
                       <div className="flex flex-col items-center justify-center h-96 w-full absolute top-0 left-0 right-0 bottom-0">
-                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#84923a] mb-4"></div>
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary mb-4"></div>
                         <p className="text-gray-600">جاري تحميل البطاقة...</p>
                       </div>
                     )}
@@ -304,7 +293,7 @@ export default function OccasionPage() {
             <a
               href="#"
               onClick={handleDownload}
-              className="bg-[#83923b] text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-[#6b7830] hover:scale-105 flex-1"
+              className="bg-primary text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-primary-dark hover:scale-105 flex-1"
             >
               <div className="flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
@@ -314,7 +303,7 @@ export default function OccasionPage() {
               </div>
             </a>
             <button
-              onClick={() => setShowSocialShare(true)}
+              onClick={() => { if (canvasRef.current) setShareImageData(canvasRef.current.toDataURL("image/png")); setShowSocialShare(true); }}
               className="bg-blue-600 text-white px-4 py-4 rounded-lg block w-full md:w-auto transition-all duration-300 hover:bg-blue-700 hover:scale-105"
             >
               <div className="flex items-center justify-center">

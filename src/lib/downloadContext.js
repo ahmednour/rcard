@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 
 const MILESTONES = [10, 50, 100, 500, 1000];
 
@@ -117,13 +117,13 @@ export function DownloadProvider({ children }) {
     }
   }, [checkMilestone, acknowledgedMilestones]);
 
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     downloadCount,
     incrementDownloadCount,
     saveFeedback,
     checkMilestone,
     acknowledgeCurrentMilestone,
-  };
+  }), [downloadCount, incrementDownloadCount, saveFeedback, checkMilestone, acknowledgeCurrentMilestone]);
 
   return (
     <DownloadContext.Provider value={contextValue}>

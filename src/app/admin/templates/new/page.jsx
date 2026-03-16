@@ -7,7 +7,7 @@ export default function TemplateManagerPage() {
   return (
     <Suspense fallback={
       <div className="flex justify-center py-10">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-[#84923a]"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-primary"></div>
       </div>
     }>
       <TemplateManager />
@@ -397,7 +397,7 @@ function TemplateManager() {
                 <div className="flex gap-2">
                   {editingTemplate ? (
                     <>
-                      <button onClick={handleUpdate} disabled={saving} className="bg-[#83923b] text-white px-4 py-2 rounded-lg hover:bg-[#6b7830] disabled:opacity-50 flex-1">
+                      <button onClick={handleUpdate} disabled={saving} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark disabled:opacity-50 flex-1">
                         {saving ? "جاري التحديث..." : "تحديث القالب"}
                       </button>
                       <button onClick={() => setEditingTemplate(null)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
@@ -405,7 +405,7 @@ function TemplateManager() {
                       </button>
                     </>
                   ) : (
-                    <button onClick={handleSave} disabled={saving || !uploadedImagePath} className="bg-[#83923b] text-white px-4 py-2 rounded-lg hover:bg-[#6b7830] disabled:opacity-50 flex-1">
+                    <button onClick={handleSave} disabled={saving || !uploadedImagePath} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark disabled:opacity-50 flex-1">
                       {saving ? "جاري الحفظ..." : "حفظ القالب"}
                     </button>
                   )}
@@ -436,14 +436,14 @@ function TemplateManager() {
             <h2 className="text-lg font-semibold mb-4">القوالب الحالية ({templates.length})</h2>
             {loading ? (
               <div className="flex justify-center py-6">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-[#84923a]"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-primary"></div>
               </div>
             ) : templates.length === 0 ? (
               <p className="text-gray-500 text-center py-6">لا توجد قوالب لهذه المناسبة</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {templates.map((t, idx) => (
-                  <div key={t.id} className={`border rounded-lg p-3 ${!t.isActive ? "opacity-50" : ""} ${editingTemplate?.id === t.id ? "ring-2 ring-[#83923b]" : ""}`}>
+                  <div key={t.id} className={`border rounded-lg p-3 ${!t.isActive ? "opacity-50" : ""} ${editingTemplate?.id === t.id ? "ring-2 ring-primary" : ""}`}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={t.imagePath}

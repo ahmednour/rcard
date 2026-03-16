@@ -2,7 +2,7 @@
 const nextConfig = {
   basePath: "",
   reactStrictMode: true,
-  // trailingSlash: true,
+  compress: true,
   images: {
     loader: "custom",
     loaderFile: "./ImageLoader.js",
@@ -11,6 +11,7 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: ["localhost:3000"],
     },
+    optimizePackageImports: ["lucide-react", "framer-motion"],
   },
 };
 

@@ -13,11 +13,11 @@ export default function NotFound() {
       />
 
       <div className="relative mb-6">
-        <h1 className="text-[120px] sm:text-[160px] font-bold text-[#84923a] opacity-15 leading-none select-none">
+        <h1 className="text-[120px] sm:text-[160px] font-bold text-primary opacity-15 leading-none select-none">
           404
         </h1>
         <div className="absolute inset-0 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-[#84923a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
@@ -33,7 +33,7 @@ export default function NotFound() {
       <div className="flex flex-col sm:flex-row gap-3">
         <Link
           href="/"
-          className="bg-[#83923b] text-white px-8 py-3 rounded-lg hover:bg-[#6b7830] transition-all duration-300 hover:scale-105 font-medium"
+          className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-all duration-300 hover:scale-105 font-medium"
         >
           العودة للرئيسية
         </Link>

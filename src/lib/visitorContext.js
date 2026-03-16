@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 
 const VisitorContext = createContext({
   visitorCount: 0,
@@ -32,8 +32,10 @@ export function VisitorProvider({ children }) {
     }
   }, []);
 
+  const value = useMemo(() => ({ visitorCount }), [visitorCount]);
+
   return (
-    <VisitorContext.Provider value={{ visitorCount }}>
+    <VisitorContext.Provider value={value}>
       {children}
     </VisitorContext.Provider>
   );

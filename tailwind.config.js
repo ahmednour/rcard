@@ -7,6 +7,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          DEFAULT: "var(--color-primary)",
+          dark:    "var(--color-primary-dark)",
+          light:   "var(--color-primary-light)",
+        },
+        canvas: {
+          name:   "var(--color-canvas-name)",
+          dept:   "var(--color-canvas-dept)",
+          invite: "var(--color-canvas-invite)",
+        },
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -17,9 +29,12 @@ module.exports = {
       },
       keyframes: {
         fadeIn: {
-          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "0%":   { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+      },
+      transitionDuration: {
+        DEFAULT: "var(--transition-base)",
       },
     },
   },

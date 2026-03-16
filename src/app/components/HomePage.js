@@ -45,7 +45,7 @@ export default function HomePage() {
 
         {loading ? (
           <div className="mt-8">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-[#84923a]"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-primary"></div>
           </div>
         ) : occasions.length === 0 ? (
           <div className="mt-8 text-center">

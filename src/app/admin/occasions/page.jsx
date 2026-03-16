@@ -96,7 +96,7 @@ export default function OccasionsManagement() {
         <div className="flex gap-2">
           <button
             onClick={() => { resetForm(); setShowForm(!showForm); }}
-            className="bg-[#83923b] text-white px-4 py-2 rounded-lg hover:bg-[#6b7830]"
+            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark"
           >
             {showForm ? "إلغاء" : "إضافة مناسبة"}
           </button>
@@ -155,7 +155,7 @@ export default function OccasionsManagement() {
               />
             </div>
           </div>
-          <button type="submit" disabled={saving} className="mt-4 bg-[#83923b] text-white px-6 py-2 rounded-lg hover:bg-[#6b7830] disabled:opacity-50">
+          <button type="submit" disabled={saving} className="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark disabled:opacity-50">
             {saving ? "جاري الحفظ..." : editingId ? "تحديث" : "إضافة"}
           </button>
         </form>
@@ -164,7 +164,7 @@ export default function OccasionsManagement() {
       {/* جدول المناسبات */}
       {loading ? (
         <div className="flex justify-center py-10">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-[#84923a]"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-primary"></div>
         </div>
       ) : occasions.length === 0 ? (
         <p className="text-center text-gray-500 py-10">لا توجد مناسبات. اضغط &laquo;إضافة مناسبة&raquo; للبدء.</p>

@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
+// Read design tokens once from CSS variables (set in globals.css :root)
+const getToken = (name) =>
+  typeof window !== "undefined"
+    ? getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+    : "";
+
+const COLOR_PRIMARY = () => getToken("--color-primary") || "#84923a";
+const COLOR_PRIMARY_LIGHT = () => getToken("--color-primary-light") || "#cbe44c";
+
 const ImageSlider = ({ images, onSelect, selectedIndex }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -79,7 +88,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
     inactive: { width: 12, backgroundColor: "#e2e8f0" },
     active: {
       width: 24,
-      backgroundColor: "#84923a",
+      backgroundColor: COLOR_PRIMARY(),
       transition: { duration: 0.3 },
     },
   };
@@ -93,7 +102,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
     active: {
       scale: 1.05,
       opacity: 1,
-      borderColor: "#84923a",
+      borderColor: COLOR_PRIMARY(),
       transition: { duration: 0.3 },
     },
     hover: {
@@ -159,9 +168,9 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
                   priority
                   className={`h-[500px] w-[340px] object-contain cursor-pointer rounded-lg shadow-lg ${
                     selectedIndex === currentIndex
-                      ? "border-[#cbe44c] border-4"
+                      ? "border-primary-light border-4"
                       : "border-transparent border-4"
-                  } transition-all duration-300 hover:border-[#cbe44c]/70`}
+                  } transition-all duration-300 hover:border-primary-light/70`}
                   onClick={() => handleSelect(currentIndex)}
                 />
 
@@ -171,7 +180,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
-                    className="absolute top-4 right-4 bg-[#84923a] text-white rounded-full p-2 shadow-lg z-10"
+                    className="absolute top-4 right-4 bg-primary text-white rounded-full p-2 shadow-lg z-10"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -223,7 +232,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
             whileHover="hover"
             whileTap="tap"
             onClick={() => handleSelect(currentIndex)}
-            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-[#84923a] text-white py-2 px-6 rounded-full shadow-lg z-20"
+            className="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-primary text-white py-2 px-6 rounded-full shadow-lg z-20"
           >
             اختر هذا التصميم
           </motion.button>
@@ -244,7 +253,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
             className="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="#84923a"
+            stroke="var(--color-primary)"
           >
             <path
               strokeLinecap="round"
@@ -268,7 +277,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
             className="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="#84923a"
+            stroke="var(--color-primary)"
           >
             <path
               strokeLinecap="round"
@@ -317,7 +326,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
             animate={currentIndex === index ? "active" : "inactive"}
             whileHover="hover"
             className={`relative cursor-pointer border-2 rounded-lg overflow-hidden shadow-sm ${
-              selectedIndex === index ? "ring-2 ring-[#84923a]" : ""
+              selectedIndex === index ? "ring-2 ring-primary" : ""
             }`}
             onClick={() => handleSelect(index)}
           >
@@ -333,7 +342,7 @@ const ImageSlider = ({ images, onSelect, selectedIndex }) => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute top-0 right-0 bg-[#84923a] text-white rounded-bl p-1"
+                className="absolute top-0 right-0 bg-primary text-white rounded-bl p-1"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

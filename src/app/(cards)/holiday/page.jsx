@@ -1,5 +1,8 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
+
+const cssVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 import Form from "@/components/form/Form";
 import NextImage from "next/image";
 import VisitorCounter from "@/components/VisitorCounter";
@@ -107,14 +110,14 @@ const Holiday = () => {
 
     if (data.length > 0) {
       ctx.font = "bold 36px Alexandria";
-      ctx.fillStyle = "#f98500";
+      ctx.fillStyle = cssVar("--color-canvas-name");
       ctx.textAlign = "center";
       ctx.fillText(data, textPos.x, textPos.y);
     }
 
     if (position.length > 0) {
       ctx.font = "25px Alexandria";
-      ctx.fillStyle = "#8f5c22";
+      ctx.fillStyle = cssVar("--color-canvas-dept");
       ctx.textAlign = "center";
       ctx.fillText(position, textPos.x, textPos.y + 40);
     }
@@ -355,7 +358,7 @@ const Holiday = () => {
           {cardTemplate.map((card, index) => (
             <div key={index} id={card.id} className="mb-5">
               <div className="flex flex-col justify-center items-center gap-2 flex-wrap">
-                <span className="rounded-full bg-[#84923a] shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
+                <span className="rounded-full bg-primary shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
                   {card.id}
                 </span>
                 <div className="mb-8 block text-[1.5rem]">
@@ -399,7 +402,7 @@ const Holiday = () => {
                     />
                     {isLoading && (
                       <div className="flex flex-col items-center justify-center h-96 w-full absolute top-0 left-0 right-0 bottom-0">
-                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#84923a] mb-4"></div>
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary mb-4"></div>
                         <p className="text-gray-600">جاري تحميل البطاقة...</p>
                       </div>
                     )}
@@ -413,7 +416,7 @@ const Holiday = () => {
               id="download-image-link"
               href="#"
               onClick={htmlToImageConvert}
-              className="bg-[#83923b] text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-[#6b7830] hover:scale-105 flex-1"
+              className="bg-primary text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-primary-dark hover:scale-105 flex-1"
             >
               <div className="flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">

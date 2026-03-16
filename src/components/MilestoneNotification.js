@@ -48,7 +48,7 @@ export default function MilestoneNotification() {
         <div className="mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16 text-[#83923b] mx-auto mb-4"
+            className="h-16 w-16 text-primary mx-auto mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -65,7 +65,7 @@ export default function MilestoneNotification() {
 
         <p className="text-lg mb-6">
           لقد وصلنا إلى
-          <span className="font-bold text-[#83923b] mx-1">{milestone}</span>
+          <span className="font-bold text-primary mx-1">{milestone}</span>
           بطاقة تم تحميلها!
         </p>
 
@@ -76,7 +76,7 @@ export default function MilestoneNotification() {
 
         <button
           onClick={handleClose}
-          className="bg-[#83923b] text-white px-6 py-2 rounded-lg transition-colors hover:bg-[#6b7830]"
+          className="bg-primary text-white px-6 py-2 rounded-lg transition-colors hover:bg-primary-dark"
         >
           حسناً
         </button>

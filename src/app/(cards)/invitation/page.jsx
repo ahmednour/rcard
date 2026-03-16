@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Form from "@/components/form/Form";
+
+const cssVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 import NextImage from "next/image";
 import VisitorCounter from "@/components/VisitorCounter";
 import DownloadCounter from "@/components/DownloadCounter";
@@ -116,7 +119,7 @@ const Invitation = () => {
       // Draw date/position text
       if (position && position.length > 0) {
         ctx.font = `${dateFontSize}px Alexandria, sans-serif`;
-        ctx.fillStyle = isFirstTemplate ? "#aa804e" : "white";
+        ctx.fillStyle = isFirstTemplate ? cssVar("--color-canvas-invite") : "white";
         ctx.textAlign = "center";
         ctx.fillText(position, canvasWidth / 2, dateY);
       }
@@ -193,7 +196,7 @@ const Invitation = () => {
 
     if (position && position.length > 0) {
       ctx.font = `${dateFontSize}px Alexandria, sans-serif`;
-      ctx.fillStyle = isFirstTemplate ? "#aa804e" : "white";
+      ctx.fillStyle = isFirstTemplate ? cssVar("--color-canvas-invite") : "white";
       ctx.textAlign = "center";
       ctx.fillText(position, canvas.width / 2, dateY);
     }
@@ -244,7 +247,7 @@ const Invitation = () => {
     <div
       key={i}
       className={`relative ${
-        isActive === i ? "ring-4 ring-[#84923a] rounded-lg" : ""
+        isActive === i ? "ring-4 ring-primary rounded-lg" : ""
       }`}
     >
       <NextImage
@@ -262,7 +265,7 @@ const Invitation = () => {
         }}
       />
       {isActive === i && (
-        <div className="absolute top-2 right-2 bg-[#84923a] text-white rounded-full p-1">
+        <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -345,7 +348,7 @@ const Invitation = () => {
           {cardTemplate.map((card, index) => (
             <div key={index} id={card.id} className="mb-5">
               <div className="flex flex-col justify-center items-center gap-2 flex-wrap">
-                <span className="rounded-full bg-[#84923a] shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
+                <span className="rounded-full bg-primary shadow text-[40px] font-bold h-[88px] w-[88px] mx-auto block text-center leading-[88px] text-white">
                   {card.id}
                 </span>
                 <div className="mb-8 block text-[1.5rem]">
@@ -385,7 +388,7 @@ const Invitation = () => {
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center h-96 w-full">
-                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#84923a] mb-4"></div>
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary mb-4"></div>
                         <p className="text-gray-600">جاري تحميل البطاقة...</p>
                       </div>
                     )}
@@ -399,7 +402,7 @@ const Invitation = () => {
               id="download-image-link"
               href="#"
               onClick={htmlToImageConvert}
-              className="bg-[#83923b] text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-[#6b7830] hover:scale-105 flex-1"
+              className="bg-primary text-white px-4 py-4 rounded-lg block w-full transition-all duration-300 hover:bg-primary-dark hover:scale-105 flex-1"
             >
               <div className="flex items-center justify-center">
                 <svg

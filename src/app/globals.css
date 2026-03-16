@@ -4,22 +4,44 @@
 @tailwind utilities;
 
 :root {
+  /* ── Legacy background tokens ── */
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
-  }
+  /* ── Brand – primary green ── */
+  --color-primary:       #84923a;
+  --color-primary-dark:  #6b7830;
+  --color-primary-light: #cbe44c;
+
+  /* ── Canvas text ── */
+  --color-canvas-name:   #f98500;
+  --color-canvas-dept:   #8f5c22;
+  --color-canvas-invite: #aa804e;
+
+  /* ── Home page CTA button ── */
+  --color-btn-start:     #166a45;
+  --color-btn-end:       #032114;
+  --color-btn-hover:     #1b8354;
+
+  /* ── Spinner border ── */
+  --color-spinner:       var(--color-primary);
+
+  /* ── Typography ── */
+  --font-sans:           "Alexandria", sans-serif;
+
+  /* ── Radii ── */
+  --radius-sm:  0.375rem;   /* rounded */
+  --radius-md:  0.5rem;     /* rounded-lg */
+  --radius-full: 9999px;    /* rounded-full */
+
+  /* ── Transitions ── */
+  --transition-base: 300ms;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  font-family: "Alexandria", sans-serif;
+  font-family: var(--font-sans);
   background: linear-gradient(
       to bottom,
       transparent,
@@ -65,7 +87,7 @@ body {
   height: 100%;
 }
 #card-2 h2 {
-  color: #89a10b;
+  color: var(--color-primary);
 }
 #card-2 p {
   color: #7f7f7f;
@@ -84,7 +106,7 @@ canvas {
 .cssbuttons-io {
   position: relative;
   cursor: pointer;
-  background: linear-gradient(to right, #166a45, #032114);
+  background: linear-gradient(to right, var(--color-btn-start), var(--color-btn-end));
   color: ghostwhite;
   overflow: hidden;
 }
@@ -116,7 +138,7 @@ canvas {
   background: #0d121c;
 }
 .cssbuttons-io.link2::before {
-  background: #1b8354;
+  background: var(--color-btn-hover);
 }
 .cssbuttons-io::before {
   content: "";

@@ -24,7 +24,7 @@ export default function InstructionsPage() {
           <button
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === "overview"
-                ? "bg-gray-100 border-b-2 border-[#83923b]"
+                ? "bg-gray-100 border-b-2 border-primary"
                 : ""
             }`}
             onClick={() => setActiveTab("overview")}
@@ -34,7 +34,7 @@ export default function InstructionsPage() {
           <button
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === "features"
-                ? "bg-gray-100 border-b-2 border-[#83923b]"
+                ? "bg-gray-100 border-b-2 border-primary"
                 : ""
             }`}
             onClick={() => setActiveTab("features")}
@@ -44,7 +44,7 @@ export default function InstructionsPage() {
           <button
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === "metrics"
-                ? "bg-gray-100 border-b-2 border-[#83923b]"
+                ? "bg-gray-100 border-b-2 border-primary"
                 : ""
             }`}
             onClick={() => setActiveTab("metrics")}
@@ -54,7 +54,7 @@ export default function InstructionsPage() {
           <button
             className={`px-4 py-3 text-sm font-medium ${
               activeTab === "admin"
-                ? "bg-gray-100 border-b-2 border-[#83923b]"
+                ? "bg-gray-100 border-b-2 border-primary"
                 : ""
             }`}
             onClick={() => setActiveTab("admin")}

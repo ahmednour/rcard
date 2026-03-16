@@ -6,7 +6,9 @@ export async function GET() {
   try {
     const totalCount = await prisma.visitor.count();
 
-    return NextResponse.json({ total: totalCount });
+    return NextResponse.json({ total: totalCount }, {
+      headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60" },
+    });
   } catch (error) {
     console.error("Error fetching visitor stats:", error);
     return NextResponse.json(

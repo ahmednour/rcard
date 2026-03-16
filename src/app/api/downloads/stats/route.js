@@ -188,6 +188,12 @@ export async function GET(request) {
       downloadCount: t._count.downloads,
     })).sort((a, b) => b.downloadCount - a.downloadCount);
 
+    // بدون فلاتر → كاش قصير للعرض العام، مع فلاتر → بيانات إدارية بدون كاش
+    const hasFilters = from || to || occasionId;
+    const cacheHeader = hasFilters
+      ? "no-store"
+      : "public, s-maxage=30, stale-while-revalidate=60";
+
     return NextResponse.json({
       total: totalCount,
       today: todayCount,
@@ -198,7 +204,7 @@ export async function GET(request) {
       deviceStats,
       occasionBreakdown,
       templateBreakdown,
-    });
+    }, { headers: { "Cache-Control": cacheHeader } });
   } catch (error) {
     console.error("Error fetching download stats:", error);
     return NextResponse.json(

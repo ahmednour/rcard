@@ -2,7 +2,7 @@ import React from "react";
 
 const Form = ({ pClick, dClick, data, position, type }) => {
   const inputClasses =
-    "h-14 w-full rounded-lg shadow border-2 border-[#84923a] p-2 hover:border-[#84923a] focus:outline-none peer";
+    "h-14 w-full rounded-lg shadow border-2 border-primary p-2 hover:border-primary focus:outline-none peer";
   const labelClasses =
     "absolute text-sm text-gray-500 duration-300 bg-white rounded-lg transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-5 peer-focus:text-green-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 right-1 peer-focus:bg-gradient-to-b from-[#e7e9ea] to-white";
 
