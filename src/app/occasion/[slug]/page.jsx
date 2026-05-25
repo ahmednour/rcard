@@ -28,11 +28,12 @@ export default function OccasionPage() {
   const [showSocialShare, setShowSocialShare] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [shareImageData, setShareImageData] = useState(null);
-  const [canvasDimensions, setCanvasDimensions] = useState({ width: 0, height: 0 });
 
   const elementRef = useRef(null);
   const canvasRef = useRef(null);
   const loadedImageRef = useRef(null);
+  const imageLoadIdRef = useRef(0);
+  const drawTextRef = useRef(() => {});
   const { incrementDownloadCount, saveFeedback } = useDownload();
 
   // جلب بيانات المناسبة
@@ -82,38 +83,55 @@ export default function OccasionPage() {
     }
   }, [selectedTemplate, data, position]);
 
+  drawTextRef.current = drawText;
+
   // تحميل الصورة عند تغيير القالب فقط
   useEffect(() => {
-    if (!selectedTemplate) return;
+    if (!selectedTemplate?.imagePath) return;
 
+    const loadId = ++imageLoadIdRef.current;
     setIsLoading(true);
     loadedImageRef.current = null;
 
     const img = new Image();
-    img.crossOrigin = "Anonymous";
+    const path = selectedTemplate.imagePath;
+    // crossOrigin مطلوب للتحميل من نطاق خارجي (مثل Supabase) مع الحفاظ على الكانفاس
+    if (path.startsWith("http")) {
+      img.crossOrigin = "anonymous";
+    }
 
     img.onload = () => {
+      if (loadId !== imageLoadIdRef.current) return;
+
       loadedImageRef.current = img;
       const canvas = canvasRef.current;
       if (canvas) {
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
-        setCanvasDimensions({ width: img.naturalWidth, height: img.naturalHeight });
       }
-      drawText();
+      drawTextRef.current();
       setIsLoading(false);
     };
 
-    img.onerror = () => setIsLoading(false);
-    img.src = selectedTemplate.imagePath;
+    img.onerror = () => {
+      if (loadId !== imageLoadIdRef.current) return;
+      loadedImageRef.current = null;
+      setIsLoading(false);
+    };
+
+    img.src = path;
+
+    if (img.complete) {
+      img.onload();
+    }
   }, [selectedTemplate]);
 
   // إعادة رسم النص عند تغيير البيانات فقط (بدون إعادة تحميل الصورة)
   useEffect(() => {
-    if (loadedImageRef.current) {
+    if (loadedImageRef.current && !isLoading) {
       drawText();
     }
-  }, [drawText]);
+  }, [drawText, isLoading]);
 
   // إخفاء إشعار النجاح
   useEffect(() => {
@@ -266,8 +284,6 @@ export default function OccasionPage() {
                   >
                     <canvas
                       ref={canvasRef}
-                      width={canvasDimensions.width}
-                      height={canvasDimensions.height}
                       className="text-center max-w-full h-auto border rounded-lg shadow-md"
                       style={{
                         maxHeight: "80vh",
