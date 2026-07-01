@@ -4,6 +4,9 @@
 منصة ويب لإنشاء وتخصيص كروت الدعوات والأعياد الرسمية والدينية — مبنية لأمانة منطقة نجران.  
 A web platform for creating and personalizing official invitation and holiday greeting cards — built for **Najran Municipality**.
 
+![License](https://img.shields.io/badge/License-Proprietary-red)
+![Status](https://img.shields.io/badge/Status-Private-blue)
+
 ---
 
 ## المحتويات | Table of Contents
@@ -18,6 +21,7 @@ A web platform for creating and personalizing official invitation and holiday gr
 - [لوحة التحكم | Admin Panel](#لوحة-التحكم--admin-panel)
 - [الأوامر المتاحة | Available Scripts](#الأوامر-المتاحة--available-scripts)
 - [النشر | Deployment](#النشر--deployment)
+- [الترخيص | License](#الترخيص--license)
 
 ---
 
@@ -213,5 +217,20 @@ npx prisma migrate deploy
 
 ## الترخيص | License
 
-مشروع خاص — Private project. جميع الحقوق محفوظة لأمانة منطقة نجران.  
-Private project. All rights reserved to Najran Municipality.
+**Licensed — ترخيص خاص (Proprietary)**
+
+| | |
+|---|---|
+| **المالك / Owner** | أمانة منطقة نجران — Najran Municipality |
+| **النوع / Type** | Proprietary / خاص |
+| **الاستخدام / Use** | للأغراض الرسمية للأمانة فقط — Official municipal use only |
+| **الملف / File** | [LICENSE](./LICENSE) |
+
+جميع الحقوق محفوظة © 2026 أمانة منطقة نجران.  
+All rights reserved © 2026 Najran Municipality.
+
+لا يجوز نسخ أو توزيع أو تعديل أي جزء من هذا المشروع دون إذن كتابي مسبق من الجهة المالكة.  
+No part of this project may be copied, distributed, or modified without prior written permission from the copyright holder.
+
+للاطلاع على الشروط الكاملة، راجع ملف [LICENSE](./LICENSE).  
+For the full terms, see [LICENSE](./LICENSE).
